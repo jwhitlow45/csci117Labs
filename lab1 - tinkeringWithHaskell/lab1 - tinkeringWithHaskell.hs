@@ -946,37 +946,479 @@ Prelude> even 0.0
       In an equation for ‘it’: it = even 0.0
 
 -- fst ------------------------------------------------------------------------
+fst :: (a, b) -> a
+    For any tuple of size 2, returns the first element in the tuple. An error is thrown for tuples that
+    contain less than or greater than 2 elements.
+Prelude> fst (1,2)
+1
+Prelude> fst (1,'a')
+1
+Prelude> fst ('b','a')
+'b'
+Prelude> fst ('b',2)
+'b'
+Prelude> fst ('b',"character")
+'b'
+Prelude> fst "character"
+
+<interactive>:9:5: error:
+    • Couldn't match expected type ‘(a, b0)’ with actual type ‘[Char]’
+    • In the first argument of ‘fst’, namely ‘"character"’
+      In the expression: fst "character"
+      In an equation for ‘it’: it = fst "character"
+    • Relevant bindings include it :: a (bound at <interactive>:9:1)
+Prelude> fst "ch"
+
+<interactive>:10:5: error:
+    • Couldn't match expected type ‘(a, b0)’ with actual type ‘[Char]’
+    • In the first argument of ‘fst’, namely ‘"ch"’
+      In the expression: fst "ch"
+      In an equation for ‘it’: it = fst "ch"
+    • Relevant bindings include it :: a (bound at <interactive>:10:1)
+Prelude> fst (1,2,3)
+
+<interactive>:11:5: error:
+    • Couldn't match expected type ‘(a, b0)’
+                  with actual type ‘(Integer, Integer, Integer)’
+    • In the first argument of ‘fst’, namely ‘(1, 2, 3)’
+      In the expression: fst (1, 2, 3)
+      In an equation for ‘it’: it = fst (1, 2, 3)
+    • Relevant bindings include it :: a (bound at <interactive>:11:1)
+    Prelude> fst (1)
+
+<interactive>:13:1: error:
+    • Non type-variable argument in the constraint: Num (a, b)
+      (Use FlexibleContexts to permit this)
+    • When checking the inferred type
+        it :: forall a b. Num (a, b) => a
 
 -- gcd ------------------------------------------------------------------------
+gcd :: Integral a => a -> a -> a
+    For any two Integrals, returns the greatest common denominator of them. Throws an error if there are
+    less than or greater than two integrals given.
+Prelude> gcd 24 3
+3
+Prelude> gcd 24 8
+8
+Prelude> gcd 24 9
+3
+Prelude> gcd 24 9 3
+
+<interactive>:18:1: error:
+    • Non type-variable argument in the constraint: Integral (t1 -> t2)
+      (Use FlexibleContexts to permit this)
+    • When checking the inferred type
+        it :: forall t1 t2. (Integral (t1 -> t2), Num t1) => t2
+Prelude> gcd 24
+
+<interactive>:19:1: error:
+    • No instance for (Show (Integer -> Integer))
+        arising from a use of ‘print’
+        (maybe you haven't applied a function to enough arguments?)
+    • In a stmt of an interactive GHCi command: print it
+
 
 -- head -----------------------------------------------------------------------
+head :: [a] -> a
+    For any list, returns the first element of the list. Also returns the first element of a string as
+    strings are treated as lists of characters. Throws an exception if the list is empty. Throws an error
+    if given a tuple.
+Prelude> head [1,2,3,4]
+1
+Prelude> head [6,2,3,4]
+6
+Prelude> head [6]
+6
+Prelude> head []
+*** Exception: Prelude.head: empty list
+Prelude> head ['a', 'b']
+'a'
+Prelude> head (1,2,3)
+
+<interactive>:27:6: error:
+    • Couldn't match expected type ‘[a]’
+                  with actual type ‘(Integer, Integer, Integer)’
+    • In the first argument of ‘head’, namely ‘(1, 2, 3)’
+      In the expression: head (1, 2, 3)
+      In an equation for ‘it’: it = head (1, 2, 3)
+    • Relevant bindings include it :: a (bound at <interactive>:27:1)
+Prelude> head "testing"
+'t'
 
 -- id -------------------------------------------------------------------------
+id :: a -> a
+    For any type, returns the given element resolves to. For instance, a variable can be set using the
+    = operator (dog = 10) and then id dog would return 10. This works for any type including characters,
+    strings, integers, lists, tuples, etc.
+Prelude> id 'a'
+'a'
+Prelude> id "setse"
+"setse"
+Prelude> id 5
+5
+Prelude> const id 4
+
+<interactive>:35:1: error:
+    • No instance for (Show (a0 -> a0)) arising from a use of ‘print’
+        (maybe you haven't applied a function to enough arguments?)
+    • In a stmt of an interactive GHCi command: print it
+Prelude> dog = 4
+Prelude> id dog
+4
+Prelude> dog = "aset"
+Prelude> id dog
+"aset"
+Prelude> dog = [1,2,3]
+Prelude> id dog
+[1,2,3]
 
 -- init -----------------------------------------------------------------------
+init :: [a] -> [a]
+    For any list, returns the list with the last element of the list removed. Returns an empty list
+    if there is only one element in the list. Throws an exception if called on an empty list.
+Prelude> init [1,2,3]
+[1,2]
+Prelude> init [1,2]
+[1]
+Prelude> init [1,2,10]
+[1,2]
+Prelude> init [1,2,10,'2']
+
+<interactive>:48:7: error:
+    • No instance for (Num Char) arising from the literal ‘1’
+    • In the expression: 1
+      In the first argument of ‘init’, namely ‘[1, 2, 10, '2']’
+      In the expression: init [1, 2, 10, '2']
+Prelude> init [1,2,10,12,12,42,35,346,3466,3,416,7,1]
+[1,2,10,12,12,42,35,346,3466,3,416,7]
+Prelude> init []
+*** Exception: Prelude.init: empty list
+Prelude> init [1]
+[]
 
 -- last -----------------------------------------------------------------------
+last :: [a] -> a
+    For any list, returns the last element in the list. Throws an exception if called on an empty
+    list.
+Prelude> last [1,2,3]
+3
+Prelude> last ['a','b','c']
+'c'
+Prelude> last []
+*** Exception: Prelude.last: empty list
+Prelude> last [3,2,1]
+1
 
 -- lcm ------------------------------------------------------------------------
+lcm :: Integral a => a -> a -> a
+    For any two Integrals, returns the least common multiple. Throws an error if called on
+    a floating point value or more than 2 integrals.
+Prelude> lcm 24 8
+24
+Prelude> lcm 123 2345
+288435
+Prelude> lcm 8 5
+40
+Prelude> lcm 12 5
+60
+Prelude> lcm 29 5
+145
+Prelude> lcm 29 4
+116
+Prelude> lcm 29 0
+0
+Prelude> lcm 0 0
+0
+Prelude> lcm 0 0.0
+
+<interactive>:66:1: error:
+    • Ambiguous type variable ‘a0’ arising from a use of ‘print’
+      prevents the constraint ‘(Show a0)’ from being solved.
+      Probable fix: use a type annotation to specify what ‘a0’ should be.
+      These potential instances exist:
+        instance Show Ordering -- Defined in ‘GHC.Show’
+        instance Show Integer -- Defined in ‘GHC.Show’
+        instance [safe] Show Color -- Defined at <interactive>:1:70
+        ...plus 23 others
+        ...plus 19 instances involving out-of-scope types
+        (use -fprint-potential-instances to see them all)
+    • In a stmt of an interactive GHCi command: print it
+Prelude> lcm 0 0 3
+
+<interactive>:67:1: error:
+    • Non type-variable argument in the constraint: Integral (t1 -> t2)
+      (Use FlexibleContexts to permit this)
+    • When checking the inferred type
+        it :: forall t1 t2. (Integral (t1 -> t2), Num t1) => t2
+Prelude> lcm 10 (-4)
+20
 
 -- length ---------------------------------------------------------------------
+length :: Foldable t => t a -> Int
+    For any Foldable type, returns the length of the type. Returns the number of characters in a
+    string for strings, the number of elements in a list for lists. Also works on nested lists. Throws
+    an error if called on tuples or characters.
+Prelude> length [1,2,3]
+3
+Prelude> length [1,2,3,4]
+4
+Prelude> length [1,2,3,4,12]
+5
+Prelude> length [[1,2,3,4,12],[2,1]]
+2
+Prelude> length "test string"
+11
+Prelude> length 'a'
+
+<interactive>:76:8: error:
+    • Couldn't match expected type ‘[a0]’ with actual type ‘Char’
+    • In the first argument of ‘length’, namely ‘'a'’
+      In the expression: length 'a'
+      In an equation for ‘it’: it = length 'a'
+Prelude> length 12
+
+<interactive>:77:8: error:
+    • No instance for (Num [a0]) arising from the literal ‘12’
+    • In the first argument of ‘length’, namely ‘12’
+      In the expression: length 12
+      In an equation for ‘it’: it = length 12
+Prelude> length (1,2,3,15)
+
+<interactive>:78:1: error:
+    • No instance for (Foldable ((,,,) Integer Integer Integer))
+        arising from a use of ‘length’
+    • In the expression: length (1, 2, 3, 15)
+      In an equation for ‘it’: it = length (1, 2, 3, 15)
+
 
 -- null -----------------------------------------------------------------------
+null :: Foldable t => t a -> Bool
+    For any Foldable type t, returns True if t has no elements and False if t does have elements. Can be
+    used to check if t is empty. Throws an error if called on tuples or characters.
+Prelude> null [1,2,3]
+False
+Prelude> null []
+True
+Prelude> null ""
+True
+Prelude> null ''
+
+<interactive>:83:6: error:
+    Parser error on `''`
+    Character literals may not be empty
+Prelude> null "asdF"
+False
+Prelude> null 0
+
+<interactive>:85:6: error:
+    • No instance for (Num [a0]) arising from the literal ‘0’
+    • In the first argument of ‘null’, namely ‘0’
+      In the expression: null 0
+      In an equation for ‘it’: it = null 0
+Prelude> null '\0'
+
+<interactive>:86:6: error:
+    • Couldn't match expected type ‘[a0]’ with actual type ‘Char’
+    • In the first argument of ‘null’, namely ‘'\0'’
+      In the expression: null '\0'
+      In an equation for ‘it’: it = null '\0'
+Prelude> null ()
+
+<interactive>:87:6: error:
+    • Couldn't match expected type ‘[a0]’ with actual type ‘()’
+    • In the first argument of ‘null’, namely ‘()’
+      In the expression: null ()
+      In an equation for ‘it’: it = null ()
 
 -- odd ------------------------------------------------------------------------
+odd :: Integral a => a -> Bool
+    For any Integral type a, returns True if a is odd and False if a is even. Throws an error if called
+    on floating point numbers.
+Prelude> odd 2
+False
+Prelude> odd 12
+False
+Prelude> odd (length "aset")
+False
+Prelude> odd (length "asets")
+True
+Prelude> odd (length "asetds")
+False
+Prelude> odd (length [1,2,3])
+True
+Prelude> odd 1.1
+
+<interactive>:95:1: error:
+    • Ambiguous type variable ‘a0’ arising from a use of ‘odd’
+      prevents the constraint ‘(Integral a0)’ from being solved.
+      Probable fix: use a type annotation to specify what ‘a0’ should be.
+      These potential instances exist:
+        instance Integral Integer -- Defined in ‘GHC.Real’
+        instance Integral Int -- Defined in ‘GHC.Real’
+        instance Integral Word -- Defined in ‘GHC.Real’
+        ...plus one instance involving out-of-scope types
+        (use -fprint-potential-instances to see them all)
+    • In the expression: odd 1.1
+      In an equation for ‘it’: it = odd 1.1
+
+<interactive>:95:5: error:
+    • Ambiguous type variable ‘a0’ arising from the literal ‘1.1’
+      prevents the constraint ‘(Fractional a0)’ from being solved.
+      Probable fix: use a type annotation to specify what ‘a0’ should be.
+      These potential instances exist:
+        instance Fractional Double -- Defined in ‘GHC.Float’
+        instance Fractional Float -- Defined in ‘GHC.Float’
+        ...plus one instance involving out-of-scope types
+        (use -fprint-potential-instances to see them all)
+    • In the first argument of ‘odd’, namely ‘1.1’
+      In the expression: odd 1.1
+      In an equation for ‘it’: it = odd 1.1
+Prelude> odd "saset"
+
+<interactive>:96:1: error:
+    • No instance for (Integral [Char]) arising from a use of ‘odd’
+    • In the expression: odd "saset"
+      In an equation for ‘it’: it = odd "saset"
 
 -- repeat ---------------------------------------------------------------------
+repeat :: a -> [a]
+    For any type a, creates a neverending list of values a. Outputs were truncated. Throws an error
+    when asked to repeat an empty character.
+Prelude> repeat 3
+[3,3,3,3,3,3,3,3,3,
+Prelude> repeat "ast"
+["ast","ast","ast","ast"
+Prelude> repeat ''
+
+<interactive>:6:8: error:
+    Parser error on `''`
+    Character literals may not be empty
+Prelude> repeat ""
+["","","","","",""
+Prelude> repeat '\0'
+"\NUL\NUL\NUL\NUL\NUL
 
 -- replicate ------------------------------------------------------------------
+replicate :: Int -> a -> [a]
+    For any Integer type, t, and any type, a, creates a list containing t number of the value a. Calling
+    replicate on a character returns a string. Can be used to create nested lists. Throws an error when
+    attempting to call replicate on the null
+    character.  
+Prelude> replicate 1 3
+[3]
+Prelude> replicate 20 'a'
+"aaaaaaaaaaaaaaaaaaaa"
+Prelude> replicate 20 "a"
+["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"]
+Prelude> replicate 20 '/0'
+
+<interactive>:16:15: error: parse error on input ‘/’
+Prelude> replicate 1 '2'
+"2"
+Prelude> replicate 13 '2'
+"2222222222222"
+Prelude> replicate 12 [1,2,3]
+[[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3]]
+
 
 -- reverse --------------------------------------------------------------------
+reverse :: [a] -> [a]
+    For any list a, returns the list in reverse order. Can be used on strings. Throws an error when called
+    on tuples as they cannot be modified.
+Prelude> reverse "test"
+"tset"
+Prelude> reverse [1,2,3]
+[3,2,1]
+Prelude> reverse (1,2,3)
+
+<interactive>:22:9: error:
+    • Couldn't match expected type ‘[a]’
+                  with actual type ‘(Integer, Integer, Integer)’
+    • In the first argument of ‘reverse’, namely ‘(1, 2, 3)’
+      In the expression: reverse (1, 2, 3)
+      In an equation for ‘it’: it = reverse (1, 2, 3)
+    • Relevant bindings include it :: [a] (bound at <interactive>:22:1)
 
 -- snd ------------------------------------------------------------------------
+snd :: (a, b) -> b
+    For any tuple of size 2, returns the second element in the tuple. Throws an error when called
+    on anything other than a tuple.
+Prelude> snd (1,2)
+2
+Prelude> snd (2,1)
+1
+Prelude> snd "st"
+
+<interactive>:6:5: error:
+    • Couldn't match expected type ‘(a0, b)’ with actual type ‘[Char]’
+    • In the first argument of ‘snd’, namely ‘"st"’
+      In the expression: snd "st"
+      In an equation for ‘it’: it = snd "st"
+    • Relevant bindings include it :: b (bound at <interactive>:6:1)
+Prelude> snd [1,2]
+
+<interactive>:7:5: error:
+    • Couldn't match expected type ‘(a0, b)’
+                  with actual type ‘[Integer]’
+    • In the first argument of ‘snd’, namely ‘[1, 2]’
+      In the expression: snd [1, 2]
+      In an equation for ‘it’: it = snd [1, 2]
+    • Relevant bindings include it :: b (bound at <interactive>:7:1)
 
 -- splitAt --------------------------------------------------------------------
+splitAt :: Int -> [a] -> ([a], [a])
+    For any Integer type, t, and list a, returns a tuple containing two lists. The first element in the tuple
+    contains elements from index 0 to t, and the second tuple contains elements from index t+1 to the size of
+    the tuple. If t is 0 then the first element of the tuple will be an empty list. If t is greater than the
+    size of the list then the second element of the tuple will be an empty list. If the a is empty the returned
+    tuple will contain two empty lists. Can be used on strings to split at a given index.
+Prelude> splitAt 3 [1]
+([1],[])
+Prelude> splitAt 0 [1]
+([],[1])
+Prelude> splitAt 3 [1,2,3,4,5]
+([1,2,3],[4,5])
+Prelude> splitAt 3 []
+([],[])
+Prelude> splitAt 3 "test string"
+("tes","t string")
 
 -- zip ------------------------------------------------------------------------
+zip :: [a] -> [b] -> [(a, b)]
+    For any two lists a and b, creates a list of tuples of size 2 containing the first elements from each list
+    in the first tuple, the second element from each list in the second tuple and so on. The first element of
+    each tuple is from list a and the second element of each tuple is from list b. If either list is smaller
+    than another list then zip returns n tuples, where n is the size of the smaller list. If one or both
+    lists are empty than an empty list is returned. Can be used on strings. Throws an error if called on tuples.
+Prelude> zip [1,2,3] ['a','b','c']
+[(1,'a'),(2,'b'),(3,'c')]
+Prelude> zip [1,3] ['a','b','c']
+[(1,'a'),(3,'b')]
+Prelude> zip [1,3] []
+[]
+Prelude> zip [] []
+[]
+Prelude> zip (1,2,3) ('a','b','c')
 
+<interactive>:20:5: error:
+    • Couldn't match expected type ‘[a]’
+                  with actual type ‘(Integer, Integer, Integer)’
+    • In the first argument of ‘zip’, namely ‘(1, 2, 3)’
+      In the expression: zip (1, 2, 3) ('a', 'b', 'c')
+      In an equation for ‘it’: it = zip (1, 2, 3) ('a', 'b', 'c')
+    • Relevant bindings include
+        it :: [(a, b)] (bound at <interactive>:20:1)
+
+<interactive>:20:13: error:
+    • Couldn't match expected type ‘[b]’
+                  with actual type ‘(Char, Char, Char)’
+    • In the second argument of ‘zip’, namely ‘('a', 'b', 'c')’
+      In the expression: zip (1, 2, 3) ('a', 'b', 'c')
+      In an equation for ‘it’: it = zip (1, 2, 3) ('a', 'b', 'c')
+    • Relevant bindings include
+        it :: [(a, b)] (bound at <interactive>:20:1)
+Prelude> zip "123" "abc"
+[('1','a'),('2','b'),('3','c')]
 
 -- The rest of these are higher-order, i.e., they take functions as
 -- arguments. This means that you'll need to "construct" functions to
