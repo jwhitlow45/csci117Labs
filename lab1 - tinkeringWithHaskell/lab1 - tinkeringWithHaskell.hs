@@ -535,7 +535,7 @@ Prelude> [2,"dog"]++[1,"cat"]
       In the first argument of ‘(++)’, namely ‘[2, "dog"]’
       In the expression: [2, "dog"] ++ [1, "cat"]
 
--- compare -----------------------------------------:typ---------------------------
+-- compare --------------------------------------------------------------------
 compare :: Ord a => a -> a -> Ordering
     For any Ordered type, returns the relationship of the first given element to the second given element
     in the form LT (less than), EQ (equal), or GT (greater than). Elements must be of the same type otherwise
@@ -567,24 +567,383 @@ Prelude> compare 2 'a'
       In the expression: compare 2 'a'
       In an equation for ‘it’: it = compare 2 'a'
 
-
 -- <, > -----------------------------------------------------------------------
+(<) :: Ord a => a -> a -> Bool
+(>) :: Ord a => a -> a -> Bool
+    For any pair of Ordered types, returns the Boolean result of the first element less than (<) or greater
+    than (>) the second element. An error is returned if the first and second element are of different types.
+
+Prelude> 10<12
+True
+Prelude> 11<12
+True
+Prelude> 11<9
+False
+Prelude> 10>9
+True
+Prelude> 10>90
+False
+Prelude> 90>90
+False
+Prelude> 'a'<'b'
+True
+Prelude> 'a'>'b'
+False
+Prelude> 'a'>'A'
+True
+Prelude> 'a'>10
+
+<interactive>:62:5: error:
+    • No instance for (Num Char) arising from the literal ‘10’
+    • In the second argument of ‘(>)’, namely ‘10’
+      In the expression: 'a' > 10
+      In an equation for ‘it’: it = 'a' > 10
+Prelude> "string"<"dog"
+False
 
 -- max, min -------------------------------------------------------------------
+max :: Ord a => a -> a -> a
+min :: Ord a => a -> a -> a
+    For any pair of Ordered types, returns the max or min of the given pair. Returns an error if the elements
+    in the pair are not of the same type.
+
+Prelude> max 9 10
+10
+Prelude> max 10 9
+10
+Prelude> max 'a' 'b'
+'b'
+Prelude> max 'a' 10
+
+<interactive>:72:9: error:
+    • No instance for (Num Char) arising from the literal ‘10’
+    • In the second argument of ‘max’, namely ‘10’
+      In the expression: max 'a' 10
+      In an equation for ‘it’: it = max 'a' 10
+Prelude> max "dog" "cat"
+"dog"
+Prelude> min 9 10
+9
+Prelude> min 10 9
+9
+Prelude> min 'a' 'b'
+'a'
+Prelude> min 'a' 10
+
+<interactive>:77:9: error:
+    • No instance for (Num Char) arising from the literal ‘10’
+    • In the second argument of ‘min’, namely ‘10’
+      In the expression: min 'a' 10
+      In an equation for ‘it’: it = min 'a' 10
+Prelude> min "dog" "cat"
+"cat"
 
 -- ^ --------------------------------------------------------------------------
+(^) :: (Integral b, Num a) => a -> b -> a
+    For any Integral type b, and a number type a, performs the mathematical exponent operation in the form
+    a ^ b. Characters are not type casted to integers. If b is a floating point number an error is thrown.
+
+Prelude> 2 ^ 7
+128
+Prelude> 2.5 ^ 7
+610.3515625
+Prelude> 2.5 ^ 7.1
+
+<interactive>:87:1: error:
+    • Could not deduce (Integral b0) arising from a use of ‘^’
+      from the context: Fractional a
+        bound by the inferred type of it :: Fractional a => a
+        at <interactive>:87:1-9
+      The type variable ‘b0’ is ambiguous
+      These potential instances exist:
+        instance Integral Integer -- Defined in ‘GHC.Real’
+        instance Integral Int -- Defined in ‘GHC.Real’
+        instance Integral Word -- Defined in ‘GHC.Real’
+        ...plus one instance involving out-of-scope types
+        (use -fprint-potential-instances to see them all)
+    • In the expression: 2.5 ^ 7.1
+      In an equation for ‘it’: it = 2.5 ^ 7.1
+
+<interactive>:87:7: error:
+    • Could not deduce (Fractional b0) arising from the literal ‘7.1’
+      from the context: Fractional a
+        bound by the inferred type of it :: Fractional a => a
+        at <interactive>:87:1-9
+      The type variable ‘b0’ is ambiguous
+      These potential instances exist:
+        instance Fractional Double -- Defined in ‘GHC.Float’
+        instance Fractional Float -- Defined in ‘GHC.Float’
+        ...plus one instance involving out-of-scope types
+        (use -fprint-potential-instances to see them all)
+    • In the second argument of ‘(^)’, namely ‘7.1’
+      In the expression: 2.5 ^ 7.1
+      In an equation for ‘it’: it = 2.5 ^ 7.1
+Prelude> 2 ^ 7.1
+
+<interactive>:88:1: error:
+    • Could not deduce (Integral b0) arising from a use of ‘^’
+      from the context: Num a
+        bound by the inferred type of it :: Num a => a
+        at <interactive>:88:1-7
+      The type variable ‘b0’ is ambiguous
+      These potential instances exist:
+        instance Integral Integer -- Defined in ‘GHC.Real’
+        instance Integral Int -- Defined in ‘GHC.Real’
+        instance Integral Word -- Defined in ‘GHC.Real’
+        ...plus one instance involving out-of-scope types
+        (use -fprint-potential-instances to see them all)
+    • In the expression: 2 ^ 7.1
+      In an equation for ‘it’: it = 2 ^ 7.1
+
+<interactive>:88:5: error:
+    • Could not deduce (Fractional b0) arising from the literal ‘7.1’
+      from the context: Num a
+        bound by the inferred type of it :: Num a => a
+        at <interactive>:88:1-7
+      The type variable ‘b0’ is ambiguous
+      These potential instances exist:
+        instance Fractional Double -- Defined in ‘GHC.Float’
+        instance Fractional Float -- Defined in ‘GHC.Float’
+        ...plus one instance involving out-of-scope types
+        (use -fprint-potential-instances to see them all)
+    • In the second argument of ‘(^)’, namely ‘7.1’
+      In the expression: 2 ^ 7.1
+      In an equation for ‘it’: it = 2 ^ 7.1
+Prelude> 2.5 ^ 'a'
+
+<interactive>:89:1: error:
+    • Could not deduce (Integral Char) arising from a use of ‘^’
+      from the context: Fractional a
+        bound by the inferred type of it :: Fractional a => a
+        at <interactive>:89:1-9
+    • In the expression: 2.5 ^ 'a'
+      In an equation for ‘it’: it = 2.5 ^ 'a'
+Prelude> 'a' ^ 12
+
+<interactive>:90:1: error:
+    • No instance for (Num Char) arising from a use of ‘^’
+    • In the expression: 'a' ^ 12
+      In an equation for ‘it’: it = 'a' ^ 12
+
 
 -- concat ---------------------------------------------------------------------
+concat :: Foldable t => t [a] -> [a]
+    For any foldable type, concatonates a list of lists into a singular list. Since strings are lists of characters
+    these can be concatonated using concat as such: concat ["dog","cat"] returns "dogcat". Returns an error if the
+    types the lists are different from one another.
+Prelude> concat [[3,2],[2,3]]
+[3,2,2,3]
+Prelude> concat "string"
+
+<interactive>:95:8: error:
+    • Couldn't match type ‘Char’ with ‘[a]’
+      Expected type: [[a]]
+        Actual type: [Char]
+    • In the first argument of ‘concat’, namely ‘"string"’
+      In the expression: concat "string"
+      In an equation for ‘it’: it = concat "string"
+    • Relevant bindings include it :: [a] (bound at <interactive>:95:1)
+Prelude> concat ["string", "test"]
+"stringtest"
+Prelude> concat ['a','a']
+
+<interactive>:97:9: error:
+    • Couldn't match expected type ‘[a]’ with actual type ‘Char’
+    • In the expression: 'a'
+      In the first argument of ‘concat’, namely ‘['a', 'a']’
+      In the expression: concat ['a', 'a']
+    • Relevant bindings include it :: [a] (bound at <interactive>:97:1)
+
+<interactive>:97:13: error:
+    • Couldn't match expected type ‘[a]’ with actual type ‘Char’
+    • In the expression: 'a'
+      In the first argument of ‘concat’, namely ‘['a', 'a']’
+      In the expression: concat ['a', 'a']
+    • Relevant bindings include it :: [a] (bound at <interactive>:97:1)
+Prelude> concat [[1,2,3]['a','b','c']]
+
+<interactive>:98:9: error:
+    • Couldn't match expected type ‘[Char] -> [a]’
+                  with actual type ‘[Integer]’
+    • The function ‘[1, 2, 3]’ is applied to one argument,
+      but its type ‘[Integer]’ has none
+      In the expression: [1, 2, 3] ['a', 'b', 'c']
+      In the first argument of ‘concat’, namely
+        ‘[[1, 2, 3] ['a', 'b', ....]]’
+    • Relevant bindings include it :: [a] (bound at <interactive>:98:1)
 
 -- const ----------------------------------------------------------------------
+const :: a -> b -> a
+
 
 -- cycle ----------------------------------------------------------------------
-
+cycle :: [a] -> [a]
+    For any list, returns a repeating, neverending list cycling through the elements in the list. When the final
+    element of the list is reached the cycle resumes at the first element of the list. Returns an error if any
+    elements in the list are not of the same type.
+Prelude> cycle [1,4,'a']
+    G
+Prelude> cycle [1,4,1]
+[1,4,1,1,4,1,1,4,1,1,4,1,1,4,1
+<interactive>:2:8: error:
+    • No instance for (Num Char) arising from the literal ‘1’
+    • In the expression: 1
+      In the first argument of ‘cycle’, namely ‘[1, 4, 'a']’
+      In the expression: cycle [1, 4, 'a']
+Prelude> cycle ["string"]
+["string","string","string","string","string"...
 -- drop, take -----------------------------------------------------------------
+drop :: Int -> [a] -> [a]
+take :: Int -> [a] -> [a]
+    For any Integer type given a List, drop returns the list with n number of elements removed from the front of the list,
+    where n is the Integer type. Take returns the list containing n number of elements from the start of the list, where n
+    is the Integer type. Drop returns an empty list when n is greater than the size of the list, and take returns the original
+    list when n is greater than the size of the list. Both operations throw an error when n is a negative Integer.
+
+Prelude> drop 2 [2,3,4]
+[4]
+Prelude> drop 1 [2,3,4]
+[3,4]
+Prelude> drop 0 [2,3,4]
+[2,3,4]
+Prelude> drop 4 [2,3,4]
+[]
+Prelude> drop -1 [2,3,4]
+
+<interactive>:7:1: error:
+    • Non type-variable argument
+        in the constraint: Num ([a1] -> Int -> [a2] -> [a2])
+      (Use FlexibleContexts to permit this)
+    • When checking the inferred type
+        it :: forall a1 a2.
+              (Num a1, Num ([a1] -> Int -> [a2] -> [a2]),
+               Num (Int -> [a2] -> [a2])) =>
+              Int -> [a2] -> [a2]
+
+Prelude> take 1 [2,3,4]
+[2]
+Prelude> take 2 [2,3,4]
+[2,3]
+Prelude> take 0 [2,3,4]
+[]
+Prelude> take 4 [2,3,4]
+[2,3,4]
+Prelude> take -1 [2,3,4]
+
+<interactive>:8:1: error:
+    • Non type-variable argument
+        in the constraint: Num ([a1] -> Int -> [a2] -> [a2])
+      (Use FlexibleContexts to permit this)
+    • When checking the inferred type
+        it :: forall a1 a2.
+              (Num a1, Num ([a1] -> Int -> [a2] -> [a2]),
+               Num (Int -> [a2] -> [a2])) =>
+              Int -> [a2] -> [a2]
 
 -- elem -----------------------------------------------------------------------
+elem :: (Foldable t, Eq a) => a -> t a -> Bool
+    For any Foldable type t, and Equivalent type a, elem returns a Boolean. True is returned if a is in
+    t, and False is returned if a is not in t. In simpler terms elem checks if a is an element in t. Elem
+    throws an error if the type a is not the same as the elements in type t.
+Prelude> elem 4 [2,3,4]
+True
+Prelude> elem 1 [2,3,4]
+False
+Prelude> elem 'a' [2,3,4]
+
+<interactive>:13:11: error:
+    • No instance for (Num Char) arising from the literal ‘2’
+    • In the expression: 2
+      In the second argument of ‘elem’, namely ‘[2, 3, 4]’
+      In the expression: elem 'a' [2, 3, 4]
+Prelude> elem 2 [2,3,4]
+True
+Prelude> elem 3 [2,3,4]
+True
+Prelude> elem 'a' ['a','b','c']
+True
+Prelude> elem 'd' ['a','b','c']
+False
+Prelude> elem 1 ['a','b','c']
+
+<interactive>:18:6: error:
+    • No instance for (Num Char) arising from the literal ‘1’
+    • In the first argument of ‘elem’, namely ‘1’
+      In the expression: elem 1 ['a', 'b', 'c']
+      In an equation for ‘it’: it = elem 1 ['a', 'b', 'c']
+Prelude> elem 'd' ["test"]
+
+<interactive>:19:11: error:
+    • Couldn't match expected type ‘Char’ with actual type ‘[Char]’
+    • In the expression: "test"
+      In the second argument of ‘elem’, namely ‘["test"]’
+      In the expression: elem 'd' ["test"]
+Prelude> elem 'd' "test"
+False
+Prelude> elem 'e' "test"
+True
 
 -- even -----------------------------------------------------------------------
+even :: Integral a => a -> Bool
+    For any Integral type a, returns a Bool if a is even and false if it is not even. Does not typecast characters
+    to an Integral and throws an error in instances with a char type as the argument. Also throws an error when
+    floating point numbers are present.
+Prelude> even 23
+False
+Prelude> even 2
+True
+Prelude> even 'a'
+
+<interactive>:27:1: error:
+    • No instance for (Integral Char) arising from a use of ‘even’
+    • In the expression: even 'a'
+      In an equation for ‘it’: it = even 'a'
+Prelude> even "cats"
+
+<interactive>:28:1: error:
+    • No instance for (Integral [Char]) arising from a use of ‘even’
+    • In the expression: even "cats"
+      In an equation for ‘it’: it = even "cats"
+Prelude> even -2
+
+<interactive>:29:1: error:
+    • Non type-variable argument in the constraint: Num (a -> Bool)
+      (Use FlexibleContexts to permit this)
+    • When checking the inferred type
+        it :: forall a. (Integral a, Num (a -> Bool)) => a -> Bool
+Prelude> even 0
+True
+Prelude> even (-2)
+True
+Prelude> even (-9)
+False
+Prelude> even 0.0
+
+<interactive>:34:1: error:
+    • Ambiguous type variable ‘a0’ arising from a use of ‘even’
+      prevents the constraint ‘(Integral a0)’ from being solved.
+      Probable fix: use a type annotation to specify what ‘a0’ should be.
+      These potential instances exist:
+        instance Integral Integer -- Defined in ‘GHC.Real’
+        instance Integral Int -- Defined in ‘GHC.Real’
+        instance Integral Word -- Defined in ‘GHC.Real’
+        ...plus one instance involving out-of-scope types
+        (use -fprint-potential-instances to see them all)
+    • In the expression: even 0.0
+      In an equation for ‘it’: it = even 0.0
+
+<interactive>:34:6: error:
+    • Ambiguous type variable ‘a0’ arising from the literal ‘0.0’
+      prevents the constraint ‘(Fractional a0)’ from being solved.
+      Probable fix: use a type annotation to specify what ‘a0’ should be.
+      These potential instances exist:
+        instance Fractional Double -- Defined in ‘GHC.Float’
+        instance Fractional Float -- Defined in ‘GHC.Float’
+        ...plus one instance involving out-of-scope types
+        (use -fprint-potential-instances to see them all)
+    • In the first argument of ‘even’, namely ‘0.0’
+      In the expression: even 0.0
+      In an equation for ‘it’: it = even 0.0
 
 -- fst ------------------------------------------------------------------------
 
