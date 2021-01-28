@@ -74,7 +74,8 @@ CallStack (from HasCallStack):
 -- toEnum, fromEnum, enumFrom, enumFromThen, enumFromTo, enumFromThenTo -------
 All of the functions in this section work only for enumerated types.
 toEnum :: Enum a => Int -> a
-    Takes an integer and finds the element at that index in the enumerated type starting at 0
+    Takes an integer and finds the element at that index in the enumerated type starting at 0.
+    Returns an error if a negative integer is given as an argument.
 Prelude> (toEnum 3) :: Color
 Green
 Prelude> (toEnum 0) :: Color
@@ -88,7 +89,7 @@ Prelude> (toEnum -1) :: Color
       In an equation for ‘it’: it = (toEnum - 1) :: Color
 
 toEnum :: Enum a => Int -> a
-    Takes an enumerated element and returns the index in the enumerated type the element exists at
+    Takes an enumerated argument and returns the index in the enumerated type the element exists at.
 Prelude> enumFrom Violet
 [Violet]
 Prelude> fromEnum Red
@@ -107,12 +108,11 @@ Prelude> enumFrom Blue
 Prelude> enumFrom Yellow
 [Yellow,Green,Blue,Violet]
 Prelude> enumFrom 0 --truncated output due to size
-[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179
+[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46
 
 enumFromThen :: Enum a => a -> a -> [a]
     Returns a list containing a given element, and every element n indices after it in the enumerated type,
-    where n is the distance between the first given element and the second given element
-Prelude> enumFromThen Red Green
+    where n is the distance between the first given argument and the second given argument
 [Red,Green]
 Prelude> enumFromThen Red Blue
 [Red,Blue]
@@ -141,8 +141,8 @@ Prelude> enumFromThen Violet Green
 
 
 enumFromTo :: Enum a => a -> a -> [a]
-    Returns a list containing every element from a given lesser element to a given greater element.
-    Returns an empty list if the first element given is greater than the second element.
+    Returns a list containing every element from a given lesser argument to a given greater argument.
+    Returns an empty list if the first argument given is greater than the second argument.
 Prelude> enumFromTo 0 2
 [0,1,2]
 Prelude> enumFromTo 2 0
@@ -166,10 +166,10 @@ Prelude> enumFromTo 3 (-3)
 []
 
 enumFromThenTo :: Enum a => a -> a -> a -> [a]
-    Returns a list containing the first given element, and every element n indicies after it up to m,
-    where n is the distance between the first and second given eleme1nt, and m is the third given element.
-    Returns an empty list if the distance between the first and second element does not allow for the third
-    element to be reached. Such is the case in enumFromThenTo 1 (-2) 9.
+    Returns a list containing the first given argument, and every element n indicies after it up to m,
+    where n is the distance between the first and second arguments, and m is the third argument.
+    Returns an empty list if the distance between the first and second arguments does not allow for the third
+    argument to be reached. Such is the case in enumFromThenTo 1 (-2) 9.
 Prelude> enumFromThenTo 0 3 9
 [0,3,6,9]
 Prelude> enumFromThenTo 0 2 9
@@ -201,9 +201,9 @@ Prelude> enumFromThenTo 1 (-2) 9
 -- ==, /= ---------------------------------------------------------------------
 (==) :: Eq a => a -> a -> Bool
 (/=) :: Eq a => a -> a -> Bool
-    For any equality type, == returns True if the two element which are being compared are equivalent, and False if they are not.
-    Furthermore, /= returns True if two elements are not equivalent, and False if they are not. An error is presented if two
-    elements are not of the same type and therefore cannot be compared.
+    For any equality type, == returns True if the two arguments are equivalent, and False if they are not.
+    Furthermore, /= returns True if two arguments are not equivalent, and False if they are not. An error is presented if two
+    arguments are not of the same type and therefore cannot be compared.
 Prelude> True == True
 True
 Prelude> 0 == 1
@@ -244,7 +244,7 @@ Prelude> 'a' /= 9
 -- quot, div (Q: what is the difference? Hint: negative numbers) --------------
 quot :: Integral a => a -> a -> a
 div :: Integral a => a -> a -> a
-    For any integral type, quot and div both perform and return the result of integer division between the first and second given elements.
+    For any integral type, quot and div both perform and return the result of integer division between the first and second given arguments.
     However quot is truncated towards zero causing it to "round up" during the division of negative numbers. Div is
     truncated towards negative infinity causing it to "round down" during the division of negative numbers. Because of 
     this both functions behave identically when dividing positive numbers. Floating points, even when divided by one
@@ -343,11 +343,11 @@ Prelude> div (-12.2) 1
 -- rem, mod  (Q: what is the difference? Hint: negative numbers) --------------
 rem :: Integral a => a -> a -> a
 mod :: Integral a => a -> a -> a
-    For any integral type, rem returns the remainder of the integer division of the first and second given elements.
-    Mod also returns the remainder but behaves differently when only one of the given elements are negative. For example
+    For any integral type, rem returns the remainder of the integer division of the first and second given arguments.
+    Mod also returns the remainder but behaves differently when only one of the given arguments are negative. For example
     rem 10 (-3) returns 1 whereas mod 10 (-3) returns -2. This is because rem effectively ignores the negative number,
-    performing the operation as if both elements were positive. Mod follows the forumla a-b*floor(a/b) which is what
-    results in different answers when one of the elements is negative. Both of these operations, as with quot and div,
+    performing the operation as if both arguments were positive. Mod follows the forumla a-b*floor(a/b) which is what
+    results in different answers when one of the arguments is negative. Both of these operations, as with quot and div,
     return a divide by 0 error when dividing by 0. Neither of these operations can handle floating point numbers and
     return errors in those instances.
 
@@ -422,7 +422,7 @@ Prelude> mod 15 (-6.0)
 quotRem :: Integral a => a -> a -> (a, a)
 divMod :: Integral a => a -> a -> (a, a)
     For any integral type, quotRem and divMod return the result of their respective operations in a tuple.
-    If the second element is 0 then the operation returns a divide by zero exception. Both operations throw an
+    If the second argument is 0 then the operation returns a divide by zero exception. Both operations throw an
     error when a floating point value is present.
 
 Prelude> quotRem 10 3
@@ -537,8 +537,8 @@ Prelude> [2,"dog"]++[1,"cat"]
 
 -- compare --------------------------------------------------------------------
 compare :: Ord a => a -> a -> Ordering
-    For any Ordered type, returns the relationship of the first given element to the second given element
-    in the form LT (less than), EQ (equal), or GT (greater than). Elements must be of the same type otherwise
+    For any Ordered type, returns the relationship of the first given argument to the second given argument
+    in the form LT (less than), EQ (equal), or GT (greater than). Arguments must be of the same type otherwise
     an error will be thrown.
 
 Prelude> compare 10 2
@@ -570,8 +570,8 @@ Prelude> compare 2 'a'
 -- <, > -----------------------------------------------------------------------
 (<) :: Ord a => a -> a -> Bool
 (>) :: Ord a => a -> a -> Bool
-    For any pair of Ordered types, returns the Boolean result of the first element less than (<) or greater
-    than (>) the second element. An error is returned if the first and second element are of different types.
+    For any pair of Ordered types, returns the Boolean result of the first argument less than (<) or greater
+    than (>) the second argument. An error is returned if the first and second argument are of different types.
 
 Prelude> 10<12
 True
@@ -604,7 +604,7 @@ False
 -- max, min -------------------------------------------------------------------
 max :: Ord a => a -> a -> a
 min :: Ord a => a -> a -> a
-    For any pair of Ordered types, returns the max or min of the given pair. Returns an error if the elements
+    For any pair of Ordered types, returns the max or min of the given pair. Returns an error if the arguments
     in the pair are not of the same type.
 
 Prelude> max 9 10
@@ -728,9 +728,9 @@ Prelude> 'a' ^ 12
 
 -- concat ---------------------------------------------------------------------
 concat :: Foldable t => t [a] -> [a]
-    For any foldable type, concatonates a list of lists into a singular list. Since strings are lists of characters
-    these can be concatonated using concat as such: concat ["dog","cat"] returns "dogcat". Returns an error if the
-    types the lists are different from one another.
+    For any foldable type, concatonates a list of lists into a singular list. Since strings are
+    lists of characters these can be concatonated using concat as such: concat ["dog","cat"] returns
+    "dogcat". Returns an error if the types the lists are different from one another.
 Prelude> concat [[3,2],[2,3]]
 [3,2,2,3]
 Prelude> concat "string"
@@ -774,7 +774,65 @@ Prelude> concat [[1,2,3]['a','b','c']]
 
 -- const ----------------------------------------------------------------------
 const :: a -> b -> a
+    For any two arguments of type a and b, returns the first argument of type a. Throws an error if less than or greater than
+    two arguments are returned. Can also handle two arguments of two different types.
+*Main> const 3 3
+3
+*Main> const 3 1
+3
+*Main> const 3 0
+3
+*Main> const 3 "test"
+3
+*Main> const "test" 3
+"test"
+*Main> const 3
 
+<interactive>:11:1: error:
+    • No instance for (Show (b0 -> Integer))
+        arising from a use of ‘print’
+        (maybe you haven't applied a function to enough arguments?)
+    • In a stmt of an interactive GHCi command: print it
+*Main> const 3 3 3
+
+<interactive>:12:1: error:
+    • Non type-variable argument in the constraint: Num (t1 -> t2)
+      (Use FlexibleContexts to permit this)
+    • When checking the inferred type
+        it :: forall t1 t2. (Num t1, Num (t1 -> t2)) => t2
+*Main> f = const 5 3
+*Main> f
+5
+*Main> f = const mod 10 2
+*Main> f
+
+<interactive>:16:1: error:
+    • No instance for (Show (Integer -> Integer))
+        arising from a use of ‘print’
+        (maybe you haven't applied a function to enough arguments?)
+    • In a stmt of an interactive GHCi command: print it
+*Main> f 20
+2
+*Main> f = const mod 3
+*Main> f 3
+
+<interactive>:19:1: error:
+    • No instance for (Show (Integer -> Integer))
+        arising from a use of ‘print’
+        (maybe you haven't applied a function to enough arguments?)
+    • In a stmt of an interactive GHCi command: print it
+*Main> f 3 3
+0
+*Main> f 3 1
+0
+*Main> f 2 2
+0
+*Main> f 2 1
+0
+*Main> f 2 3
+2
+*Main> f 1 3
+1
 
 -- cycle ----------------------------------------------------------------------
 cycle :: [a] -> [a]
@@ -1047,7 +1105,7 @@ Prelude> head "testing"
 
 -- id -------------------------------------------------------------------------
 id :: a -> a
-    For any type, returns the given element resolves to. For instance, a variable can be set using the
+    For any type, returns the given argument resolves to. For instance, a variable can be set using the
     = operator (dog = 10) and then id dog would return 10. This works for any type including characters,
     strings, integers, lists, tuples, etc.
 Prelude> id 'a'
@@ -1425,15 +1483,180 @@ Prelude> zip "123" "abc"
 -- provide as arguments if you want to test them.
 
 -- all, any -------------------------------------------------------------------
+all :: Foldable t => (a -> Bool) -> t a -> Bool
+any :: Foldable t => (a -> Bool) -> t a -> Bool
+    For any foldable type, t, and any type, a, both functions return a boolean. All returns True when
+    all the elements in the foldable type are equivalent to a. Any returns True when any of the elements
+    in the foldable type are equivalent to a. Both functions return false otherwise. Both functions require
+    the type a to be the same type as the elements in t, otherwise an error is thrown. Neither of these
+    functions can be used on a tuple, but both can be used on strings.
+*Main> all (2==) [2,2,2,2]
+True
+*Main> all (2==) [2,2,2,1]
+False
+*Main> all (2==) (2,2,2,2)_
+
+<interactive>:9:1: error:
+    • Couldn't match expected type ‘t0 -> t’ with actual type ‘Bool’
+    • The function ‘all’ is applied to three arguments,
+      but its type ‘(Integer -> Bool)
+                    -> (Integer, Integer, Integer, Integer) -> Bool’
+      has only two
+      In the expression: all (2 ==) (2, 2, 2, 2) _
+      In an equation for ‘it’: it = all (2 ==) (2, 2, 2, 2) _
+    • Relevant bindings include it :: t (bound at <interactive>:9:1)
+
+<interactive>:9:20: error:
+    • Found hole: _ :: t0
+      Where: ‘t0’ is an ambiguous type variable
+    • In the third argument of ‘all’, namely ‘_’
+      In the expression: all (2 ==) (2, 2, 2, 2) _
+      In an equation for ‘it’: it = all (2 ==) (2, 2, 2, 2) _
+    • Relevant bindings include it :: t (bound at <interactive>:9:1)
+*Main> all ("cat"==) ["cat,"cat"]
+
+<interactive>:10:27: error:
+    lexical error in string/character literal at end of input
+*Main> all ("cat"==) ["cat","cat"]
+True
+*Main> all ("cat"==) ["cat","dog"]
+False
+*Main> any (1==) [1,2,3,4]
+True
+*Main> any (1==) [3,2,3,4]
+False
+*Main> any ('a'==) [3,2,3,4]
+
+<interactive>:16:14: error:
+    • No instance for (Num Char) arising from the literal ‘3’
+    • In the expression: 3
+      In the second argument of ‘any’, namely ‘[3, 2, 3, 4]’
+      In the expression: any ('a' ==) [3, 2, 3, 4]
+*Main> any ("test"==) ["test", "test"]
+True
+*Main> any ("test"==) ["test", "est"]
+True
+*Main> any ("test"==) ["est", "est"]
+False
 
 -- break ----------------------------------------------------------------------
+break :: (a -> Bool) -> [a] -> ([a], [a])
+    For any condition of type a, given a list of type a, returns a tuple of size 2 containing
+    two halves of the list. These two halves are split at the first element matching condition a.
+    The matching element becomes the first element of the second tuple. If the condition is not met or
+    is met at the last element of the list the first element of the tuple is the original list and
+    the second element is an empty list.
+*Main> break (2==) [1,2,3,4]
+([1],[2,3,4])
+*Main> break (0==) [1,2,3,4]
+([1,2,3,4],[])
+*Main> break (0==) [1,2,3,4,0]
+([1,2,3,4],[0])
+*Main> break ('w'==) "welcome"
+("","welcome")
+*Main> break ('o'==) "welcome"
+("welc","ome")
+*Main> break ('o'==) "welcomoe"
+("welc","omoe")
+
 
 -- dropWhile, takeWhile -------------------------------------------------------
+dropWhile :: (a -> Bool) -> [a] -> [a]
+takeWhile :: (a -> Bool) -> [a] -> [a]
+
+    For any condition of type a, given a list of type a, returns a list of type a. DropWhile returns
+    a list with each leading element matching the condition removed until a leading element is found
+    that does not match the condition. It does not effect any matching conditions beyond the first
+    non-matching element. TakeWhile returns a list containing each leading element, removing every
+    element after the last element matching the condition. DropWhile returns an empty list if all
+    elements match the condition. TakeWhile returns an empty list if no elements match the condition.
+
+*Main> dropWhile (1==) [1,1,1,2,1,1,1]
+[2,1,1,1]
+*Main> dropWhile (1==) [1,3,1,2,1,1,1]
+[3,1,2,1,1,1]
+*Main> dropWhile ('a') "aaaaaafaaadaa"
+*Main> dropWhile ('a'==) "aaaaaafaaadaa"
+"faaadaa"
+*Main> dropWhile (2==) [2,2,2,2,2,2]
+[]
+*Main> takeWhile ('a'==) "aaaaaafaaadaa"
+"aaaaaa"
+*Main> takeWhile (1==) [1,1,1,2,2,1,1,3,1]
+[1,1,1]
+*Main> takeWhile (1==) [2,2,2,2]
+[]
 
 -- filter ---------------------------------------------------------------------
-
+filter :: (a -> Bool) -> [a] -> [a]
+    For any condition of type a, given a list of type a, returns a list containing all elements
+    which match the condition. If no elements match this condition an empty list is returned.
+*Main> filter (1==) [1,2,3,1,4,1]
+[1,1,1]
+*Main> filter (1/=) [1,2,3,1,4,1]
+[2,3,4]
+*Main> filter (10>=) [12,12,5,4,5,4,7,23]
+[5,4,5,4,7]
+*Main> filter (<10) [12,12,5,4,5,4,7,23]
+[5,4,5,4,7]
+*Main> filter (>10) [12,12,5,4,5,4,7,23]
+[12,12,23]
+*Main> filter ('a'>=) "Asdf23fsdAF#@FZDSXsdf3rf"
+"A23AF#@FZDSX3"
+*Main> filter ('z'>=) (filter ('a'>=) "Asdf23fsdAF#@FZDSXsdf3rf")
+"A23AF#@FZDSX3"
+*Main> filter ('z'<=) (filter ('a'<=) "Asdf23fsdAF#@FZDSXsdf3rf")
+""
 -- iterate --------------------------------------------------------------------
-
+iterate :: (a -> a) -> a -> [a]
+    For any operation of type a, and any starting value of type a, returns a list starting at
+    the starting value, and performs the operation on the previous index to get the current index.
+    In the case of iterate (2*) 1 the first element, 1, is multiplied by 2 to get the second index.
+    The third index id gotten by multiplying the second index by 2 to get 4 and so on.
+*Main> iterate (2*) 1
+[1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192
+*Main> iterate (2+) 1
+[1,3,5,7,9,11,13,15,17,19,21,23,25,27
 -- map ------------------------------------------------------------------------
+map :: (a -> b) -> [a] -> [b]
+    For any function, performs the function each element of a list, returning the result for each
+    element in a list. Throws an error if any of the elements in the list cannot have the given
+    function performed on them.
+
+*Main> map (`mod` 3) [1,2,3,4,5,6]
+[1,2,0,1,2,0]
+*Main> map (mod 3) [1,2,3,4,5,6]
+[0,1,0,3,3,3]
+*Main> map (3 `mod`) [1,2,3,4,5,6]
+[0,1,0,3,3,3]
+*Main> map 2* [1,2,3,4,5]
+*Main> map (2*) [1,2,3,4,5]
+[2,4,6,8,10]
+*Main> map reverse ["test", "another test"]
+["tset","tset rehtona"]
+*Main> map (2+) ["test", "another test"]
+
+<interactive>:97:6: error:
+    • No instance for (Num [Char]) arising from a use of ‘+’
+    • In the first argument of ‘map’, namely ‘(2 +)’
+      In the expression: map (2 +) ["test", "another test"]
+      In an equation for ‘it’: it = map (2 +) ["test", "another test"]
 
 -- span -----------------------------------------------------------------------
+span :: (a -> Bool) -> [a] -> ([a], [a])
+    For any condition of type a, given a list of type a, returns a tuple of size 2 containing
+    two halves of the list. These two halves are split at the first element not matching condition a.
+    The element that does not match becomes the first element of the second list in the tuple, with
+    all elements coming after it making up the rest of the elements in that list. The first tuple contains
+    all elements that matched the condition before the non-matching element. If all elements match the
+    condition then the first element on the tuple contains the original list and the second tuple is an
+    empty list. If the first element does not match the condition then the first tuple is an empty list
+    and the second tuple contains the original list. 
+*Main> span (1==) [1,2,4,5,6,2,3,1,1,1,4,5]
+([1],[2,4,5,6,2,3,1,1,1,4,5])
+*Main> span (<6) [1,2,4,5,6,2,3,1,1,1,4,5]
+([1,2,4,5],[6,2,3,1,1,1,4,5])
+*Main> span (<7) [1,2,4,5,6,2,3,1,1,1,4,5]
+([1,2,4,5,6,2,3,1,1,1,4,5],[])
+*Main> span (1==) [2,1,2,3,4]
+([],[2,1,2,3,4])
