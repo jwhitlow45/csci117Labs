@@ -18,10 +18,10 @@ merge :: Ord a => [a] -> [a] -> [a]
 merge [] ys = ys --append rest of ys onto end of list
 merge xs [] = xs --append rest of xs only end of list
 merge (x:xs) (y:ys)
-  | x <= y = merge (x) (y)
-  | x > y  = merge (y) (x)
+  | x <= y = x:(merge (xs) (y:ys))
+  | x > y  = y:(merge (x:xs) (ys))
 
---ms :: Ord a => [a] -> [a]
---ms [] = []
---ms [x] = [x]
---ms xs = merge () ()   -- general case: deal, recursive call, merge
+ms :: Ord a => [a] -> [a]
+ms [] = []
+ms [x] = [x]
+ms xs = merge () ()   -- general case: deal, recursive call, merge
