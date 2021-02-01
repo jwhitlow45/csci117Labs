@@ -13,9 +13,9 @@
 -- Hint: notice what's happening between the answers to deal [2..7] and
 -- deal (1:[2..7]) above to get an idea of how to approach the recursion
 deal :: [a] -> ([a],[a])
-deal [] = undefined
+deal [] = ([],[])
 deal (x:xs) = let (ys,zs) = deal xs
-              in undefined
+              in (x:zs,ys) --place x into zs, then ys, alternating until the list is empty
 
 -- Now implement merge and mergesort (ms), and test with some
 -- scrambled lists to gain confidence that your code is correct
