@@ -15,21 +15,22 @@
 deal :: [a] -> ([a],[a])
 deal [] = ([],[])
 deal (x:xs) = let (ys,zs) = deal xs
-              in (x:zs,ys) --place x into zs, then ys, alternating until the list is empty
+              in (x:zs,ys)          --place x into zs, then ys,
+                                    --alternating until the list is empty
 
 -- Now implement merge and mergesort (ms), and test with some
 -- scrambled lists to gain confidence that your code is correct
 merge :: Ord a => [a] -> [a] -> [a]
-merge [] ys = undefined
-merge xs [] = undefined
+merge [] ys = ys                    --append rest of ys onto end of list
+merge xs [] = xs                    --append rest of xs only end of list
 merge (x:xs) (y:ys)
-  | x <= y = undefined
-  | x > y  = undefined
+  | x <= y = x:(merge (xs) (y:ys))  --place 'sorted' x in front of list
+  | x > y  = y:(merge (x:xs) (ys))  --place 'sorted' y in front of list
 
 ms :: Ord a => [a] -> [a]
 ms [] = []
 ms [x] = [x]
-ms xs = undefined   -- general case: deal, recursive call, merge
+ms xs = merge (ms (fst (deal xs))) (ms (snd (deal xs))) -- general case: deal, recursive call, merge
 
 
 -- 2. A backward list data structure 
