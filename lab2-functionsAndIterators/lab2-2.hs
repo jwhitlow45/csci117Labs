@@ -30,7 +30,8 @@ merge (x:xs) (y:ys)
 ms :: Ord a => [a] -> [a]
 ms [] = []
 ms [x] = [x]
-ms xs = merge (ms (fst (deal xs))) (ms (snd (deal xs))) -- general case: deal, recursive call, merge
+ms xs = let (ys, zs) = deal xs
+        in merge (ms ys) (ms zs) -- general case: deal, recursive call, merge
 
 
 -- 2. A backward list data structure 
@@ -41,19 +42,23 @@ data BList a = Nil | Snoc (BList a) a deriving (Show,Eq)
 
 -- Add an element to the beginning of a BList, like (:) does
 cons :: a -> BList a -> BList a
-cons = undefined
+cons a Nil = Snoc Nil a
+cons a (Snoc c b) = Snoc (cons a c) b
 
 -- Convert a usual list into a BList (hint: use cons in the recursive case)
 toBList :: [a] -> BList a
-toBList = undefined
+toBList [] = Nil
+toBList (x:xs) = cons x (toBList (xs))
 
 -- Add an element to the end of an ordinary list
 snoc :: [a] -> a -> [a]
-snoc = undefined
+snoc [] a = [a]
+snoc (x:xs) a = x:(snoc xs a)
 
 -- Convert a BList into an ordinary list (hint: use snoc in the recursive case)
 fromBList :: BList a -> [a]
-fromBList = undefined
+fromBList Nil = []
+fromBList (Snoc a b) = snoc (fromBList a) b
 
 
 -- 3. A binary tree data structure
