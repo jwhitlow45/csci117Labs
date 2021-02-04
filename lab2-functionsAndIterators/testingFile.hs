@@ -38,29 +38,72 @@ insert_left :: a -> Tree a -> Tree a
 insert_left newNode Empty = (Node newNode Empty Empty)
 insert_left newNode (Node root l r) = Node root (insert_left newNode l) r
 
-*Main> left = (Node 12) (Empty) (Empty)
-*Main> right = (Node 5) (Empty) (Empty)
-*Main> myTree = (Node 3) (left) (right)
-*Main> myTree 
-Node 3 (Node 12 Empty Empty) (Node 5 Empty Empty)
-*Main> a = insert_left 2 myTree 
-*Main> a
-Node 3 (Node 12 (Node 2 Empty Empty) Empty) (Node 5 Empty Empty)
-*Main> b = insert_left 2 a 
-*Main> b
-Node 3 (Node 12 (Node 2 (Node 2 Empty Empty) Empty) Empty) (Node 5 Empty Empty)
-*Main> 
+-- *Main> left = (Node 12) (Empty) (Empty)
+-- *Main> right = (Node 5) (Empty) (Empty)
+-- *Main> myTree = (Node 3) (left) (right)
+-- *Main> myTree 
+-- Node 3 (Node 12 Empty Empty) (Node 5 Empty Empty)
+-- *Main> a = insert_left 2 myTree 
+-- *Main> a
+-- Node 3 (Node 12 (Node 2 Empty Empty) Empty) (Node 5 Empty Empty)
+-- *Main> b = insert_left 2 a 
+-- *Main> b
+-- Node 3 (Node 12 (Node 2 (Node 2 Empty Empty) Empty) Empty) (Node 5 Empty Empty)
+-- *Main> 
 
 
----- Insert a new node in the rightmost spot in the tree
---insert_right :: a -> Tree a -> Tree a
---insert_right = undefined
---
----- Add up all the node values in a tree of numbers
---sum_nodes :: Num a => Tree a -> a
---sum_nodes = undefined
---
+-- Insert a new node in the rightmost spot in the tree
+insert_right :: a -> Tree a -> Tree a
+insert_right newNode Empty = (Node newNode Empty Empty)
+insert_right newNode (Node root l r) = Node root l (insert_right newNode r) 
+
+-- *Main> myTree 
+-- Node 3 (Node 12 Empty Empty) (Node 5 Empty Empty)
+-- *Main> a = insert_right 2 myTree 
+-- *Main> a
+-- Node 3 (Node 12 Empty Empty) (Node 5 Empty (Node 2 Empty Empty))
+-- *Main> b = insert_right 2 a
+-- *Main> b
+-- Node 3 (Node 12 Empty Empty) (Node 5 Empty (Node 2 Empty (Node 2 Empty Empty)))
+-- *Main> 
+
+-- Add up all the node values in a tree of numbers
+sum_nodes :: Num a => Tree a -> a
+sum_nodes Empty = 0
+sum_nodes (Node root l r) = (sum_nodes l) + (sum_nodes r) + root
+
+-- left = (Node 7) (other) (Empty)
+-- right = (Node 5) (Empty) (Empty)
+-- myTree = (Node 8) (left) (right)
+-- *Main> sum_nodes myTree 
+-- 20
+-- left = (Node 2) (other) (Empty)
+-- right = (Node 5) (Empty) (Empty)
+-- myTree = (Node 8) (left) (right)
+-- *Main> sum_nodes myTree 
+-- 15
+-- other = (Node 3) (Empty) (Empty)
+-- left = (Node 2) (other) (Empty)
+-- *Main> sum_nodes myTree 
+-- 18
+
+
+
 ---- Produce a list of the node values in the tree via an inorder traversal
 ---- Feel free to use concatenation (++)
---inorder :: Tree a -> [a]
---inorder = undefined
+inorder :: Tree a -> [a]
+inorder Empty = []
+inorder (Node root l r) = (inorder l) ++ [root] ++ (inorder r)
+
+-- other = (Node 3) (Empty) (Empty)
+-- left = (Node 2) (other) (Empty)
+-- right = (Node 5) (Empty) (Empty)
+-- myTree = (Node 8) (left) (right)
+-- *Main> inorder myTree 
+-- [3,2,8,5]
+-- other = (Node "test") (Empty) (Empty)
+-- left = (Node "test1") (other) (Empty)
+-- right = (Node"test2") (Empty) (Empty)
+-- myTree = (Node "test3") (left) (right)
+-- *Main> inorder myTree 
+-- ["test","test1","test3","test2"]
