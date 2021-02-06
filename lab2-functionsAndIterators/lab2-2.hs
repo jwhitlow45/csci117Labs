@@ -3,8 +3,6 @@
 -- including key tests and their output in comments after your code.
 
 
----- Part 1: Basic structural recursion ----------------
-
 -- 1. Merge sort
 
 -- Deal a list into two (almost) equal-sizes lists by alternating elements
@@ -18,6 +16,14 @@ deal (x:xs) = let (ys,zs) = deal xs
               in (x:zs,ys)          --place x into zs, then ys,
                                     --alternating until the list is empty
 
+-- *Main> deal [1,2,3,4,5,6,7]
+-- ([1,3,5,7],[2,4,6])
+-- *Main> deal [1,2,3,4,5,6]
+-- ([1,3,5],[2,4,6])
+-- *Main> deal [1,2,6,4,42,10]
+-- ([1,6,42],[2,4,10])
+
+
 -- Now implement merge and mergesort (ms), and test with some
 -- scrambled lists to gain confidence that your code is correct
 merge :: Ord a => [a] -> [a] -> [a]
@@ -27,12 +33,25 @@ merge (x:xs) (y:ys)
   | x <= y = x:(merge (xs) (y:ys))  --place 'sorted' x in front of list
   | x > y  = y:(merge (x:xs) (ys))  --place 'sorted' y in front of list
 
+-- *Main> merge [1,2,5,6,41] [0,1,5,9,76]
+-- [0,1,1,2,5,5,6,9,41,76]
+-- *Main> merge [2,5,10,47] [0,9,76]
+-- [0,2,5,9,10,47,76]
+-- *Main> merge [2,5,10,47] [-10,0,9,76,100]
+-- [-10,0,2,5,9,10,47,76,100]
+
 ms :: Ord a => [a] -> [a]
 ms [] = []
 ms [x] = [x]
 ms xs = let (ys, zs) = deal xs
         in merge (ms ys) (ms zs) -- general case: deal, recursive call, merge
 
+-- *Main> ms [1,19,0,120,123,124080,124,-123,1678,4034,0]
+-- [-123,0,0,1,19,120,123,124,1678,4034,124080]
+-- *Main> ms [19,0,-120,2123,120,124,-123,168,34,0,10]
+-- [-123,-120,0,0,10,19,34,120,124,168,2123]
+-- *Main> ms [10,9,8,7,6,5,4,3,2,1]
+-- [1,2,3,4,5,6,7,8,9,10]
 
 -- 2. A backward list data structure 
 
@@ -45,21 +64,58 @@ cons :: a -> BList a -> BList a
 cons a Nil = Snoc Nil a
 cons a (Snoc c b) = Snoc (cons a c) b
 
+-- Snoc (Snoc (Snoc Nil 3) 5) 3
+-- *Main> const 3 cons 3 cons 9 cons 8
+-- *Main> cons 3 (cons 4 (cons 5 (cons 9 Nil)))
+-- Snoc (Snoc (Snoc (Snoc Nil 3) 4) 5) 9
+-- *Main> cons 2 (cons 0 (cons 5 (cons 9 Nil)))
+-- Snoc (Snoc (Snoc (Snoc Nil 2) 0) 5) 9
+
 -- Convert a usual list into a BList (hint: use cons in the recursive case)
 toBList :: [a] -> BList a
 toBList [] = Nil
 toBList (x:xs) = cons x (toBList (xs))
+
+-- *Main> cons 3 (cons 4 (cons 5 (cons 9 Nil)))
+-- Snoc (Snoc (Snoc (Snoc Nil 3) 4) 5) 9
+-- *Main> cons 2 (cons 0 (cons 5 (cons 9 Nil)))
+-- Snoc (Snoc (Snoc (Snoc Nil 2) 0) 5) 9
+-- *Main> toBList [1,2,3,4,5]
+-- Snoc (Snoc (Snoc (Snoc (Snoc Nil 1) 2) 3) 4) 5
+-- *Main> toBList [9,2,10,4,4]
+-- Snoc (Snoc (Snoc (Snoc (Snoc Nil 9) 2) 10) 4) 4
+-- *Main> toBList [9,25,10,4,202]
+-- Snoc (Snoc (Snoc (Snoc (Snoc Nil 9) 25) 10) 4) 202
+-- *Main> toBList "teststring"
+-- Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc Nil 't') 'e') 's') 't') 's') 't') 'r') 'i') 'n') 'g'
 
 -- Add an element to the end of an ordinary list
 snoc :: [a] -> a -> [a]
 snoc [] a = [a]
 snoc (x:xs) a = x:(snoc xs a)
 
+-- *Main> snoc "helpme" 'p'
+-- "helpmep"
+-- *Main> snoc [1,2,3,4,5] 10
+-- [1,2,3,4,5,10]
+-- *Main> snoc [1,2,19,4,5,10] 10
+-- [1,2,19,4,5,10,10]
+
+
 -- Convert a BList into an ordinary list (hint: use snoc in the recursive case)
 fromBList :: BList a -> [a]
 fromBList Nil = []
 fromBList (Snoc a b) = snoc (fromBList a) b
 
+-- *Main> list = toBList [1,2,3,4,5,6,7]
+-- *Main> list
+-- Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc Nil 1) 2) 3) 4) 5) 6) 7
+-- *Main> fromBList list
+-- [1,2,3,4,5,6,7]
+-- *Main> list = toBList "i don't know what a snoc is"
+-- *Main> fromBList li
+-- *Main> fromBList list
+-- "i don't know what a snoc is"
 
 -- 3. A binary tree data structure
 data Tree a = Empty | Node a (Tree a) (Tree a) deriving (Show, Eq)
@@ -150,8 +206,6 @@ sum_nodes (Node root l r) = (sum_nodes l) + (sum_nodes r) + root
 -- *Main> sum_nodes myTree 
 -- 18
 
-
-
 ---- Produce a list of the node values in the tree via an inorder traversal
 ---- Feel free to use concatenation (++)
 inorder :: Tree a -> [a]
@@ -171,30 +225,89 @@ inorder (Node root l r) = (inorder l) ++ [root] ++ (inorder r)
 -- *Main> inorder myTree 
 -- ["test","test1","test3","test2"]
 
-
 -- 4. A different, leaf-based tree data structure
 data Tree2 a = Leaf a | Node2 a (Tree2 a) (Tree2 a) deriving Show
 
 -- Count the number of elements in the tree (leaf or node)
 num_elts :: Tree2 a -> Int
-num_elts = undefined
+num_elts (Leaf a) = 1
+num_elts (Node2 root l r) = (num_elts l) + (num_elts r) + 1
+
+-- left = (Node2 12) (Leaf 4) (Leaf 8)
+-- other = (Node2 1) (Leaf 6) (Leaf 10)
+-- right = (Node2 2) other (Leaf 9)
+-- root = (Node2 3) left right
+-- *Main> num_elts root
+-- 9
+-- left = (Node2 12) (Leaf 4) (Leaf 8)
+-- other = (Node2 1) (Leaf 6) (Leaf 10)
+-- right = (Node2 2) other left
+-- root = (Node2 3) left right
+-- *Main> num_elts root
+-- 11
 
 -- Add up all the elements in a tree of numbers
 sum_nodes2 :: Num a => Tree2 a -> a
-sum_nodes2 = undefined
+sum_nodes2 (Leaf a) = a
+sum_nodes2 (Node2 root l r) = (sum_nodes2 l) + (sum_nodes2 r) + root
+
+-- left = (Node2 12) (Leaf 4) (Leaf 8)
+-- other = (Node2 1) (Leaf 6) (Leaf 10)
+-- right = (Node2 2) other (Leaf 9)
+-- root = (Node2 3) left right
+-- *Main> sum_nodes2 root
+-- 55
+-- left = (Node2 12) (Leaf 4) (Leaf 8)
+-- other = (Node2 1) (Leaf 6) (Leaf 10)
+-- right = (Node2 2) other left
+-- root = (Node2 3) left right
+-- *Main> sum_nodes2 root
+-- 70
+
 
 -- Produce a list of the elements in the tree via an inorder traversal
 -- Again, feel free to use concatenation (++)
 inorder2 :: Tree2 a -> [a]
-inorder2 = undefined
+inorder2 (Leaf a) = [a]
+inorder2 (Node2 root l r) = (inorder2 l) ++ [root] ++ (inorder2 r)
+
+-- left = (Node2 12) (Leaf 4) (Leaf 8)
+-- other = (Node2 1) (Leaf 6) (Leaf 10)
+-- right = (Node2 2) other (Leaf 9)
+-- root = (Node2 3) left right
+-- *Main> inorder2 root
+-- [4,12,8,3,6,1,10,2,9]
+-- left = (Node2 12) (Leaf 4) (Leaf 8)
+-- other = (Node2 1) (Leaf 6) (Leaf 10)
+-- right = (Node2 2) other left
+-- root = (Node2 3) left right
+-- *Main> inorder2 root
+-- [4,12,8,3,6,1,10,2,4,12,8]
 
 -- Convert a Tree2 into an equivalent Tree1 (with the same elements)
 conv21 :: Tree2 a -> Tree a
-conv21 = undefined
+conv21 (Leaf a) = (Node a) Empty Empty
+conv21 (Node2 root l r) = Node (id root) (conv21 l) (conv21 r)
+
+-- left = (Node2 12) (Leaf 4) (Leaf 8)
+-- other = (Node2 1) (Leaf 6) (Leaf 10)
+-- right = (Node2 2) other (Leaf 9)
+-- root = (Node2 3) left right
+-- *Main> conv21 root
+-- Node 3 (Node 12 (Node 4 Empty Empty) (Node 8 Empty Empty)) (Node 2 (Node 1 (Node 6 Empty Empty) (Node 10 Empty Empty)) (Node 9 Empty Empty))
+-- *Main> root
+-- Node2 3 (Node2 12 (Leaf 4) (Leaf 8)) (Node2 2 (Node2 1 (Leaf 6) (Leaf 10)) (Leaf 9))
+-- left = (Node2 12) (Leaf 4) (Leaf 8)
+-- other = (Node2 1) (Leaf 6) (Leaf 10)
+-- right = (Node2 2) other left
+-- root = (Node2 3) left right
+-- *Main> conv21 root
+-- Node 3 (Node 12 (Node 4 Empty Empty) (Node 8 Empty Empty)) (Node 2 (Node 1 (Node 6 Empty Empty) (Node 10 Empty Empty)) (Node 12 (Node 4 Empty Empty) (Node 8 Empty Empty)))
+-- *Main> root
+-- Node2 3 (Node2 12 (Leaf 4) (Leaf 8)) (Node2 2 (Node2 1 (Leaf 6) (Leaf 10)) (Node2 12 (Leaf 4) (Leaf 8)))
 
 
 ---- Part 2: Iteration and Accumulators ----------------
-
 
 -- Both toBList and fromBList from Part 1 Problem 2 are O(n^2) operations.
 -- Reimplement them using iterative helper functions (locally defined using
@@ -234,8 +347,6 @@ sum_nodes2' = undefined
 -- right output.
 inorder2' :: Tree2 a -> [a]
 inorder2' = undefined
-
-
 
 ---- Part 3: Higher-order functions ----------------
 

@@ -1,109 +1,63 @@
--- 3. A binary tree data structure
-data Tree a = Empty | Node a (Tree a) (Tree a) deriving (Show, Eq)
+-- 2. A backward list data structure 
 
--- Count number of Empty's in the tree
-num_empties :: Tree a -> Int
-num_empties Empty = 1
-num_empties (Node root l r) = (num_empties l) + (num_empties r)
+-- Back Lists: Lists where elements are added to the back ("snoc" == rev "cons")
+-- For example, the list [1,2,3] is represented as Snoc (Snoc (Snoc Nil 1) 2) 3
+data BList a = Nil | Snoc (BList a) a deriving (Show,Eq)
 
+-- Add an element to the beginning of a BList, like (:) does
+cons :: a -> BList a -> BList a
+cons a Nil = Snoc Nil a
+cons a (Snoc c b) = Snoc (cons a c) b
 
--- *Main> myTree = (Node 12) (Empty) (Empty)
--- *Main> num_empties myTree 
--- 2
--- *Main> left = (Node 12) (Empty) (Empty)
--- *Main> right = (Node 1) (5) (Empty)
--- *Main> right = (Node 1) (Empty) (Empty)
--- *Main> myTree = (Node 3) (left) (right)
--- *Main> num_empties myTree 
--- 4
+-- Snoc (Snoc (Snoc Nil 3) 5) 3
+-- *Main> const 3 cons 3 cons 9 cons 8
+-- *Main> cons 3 (cons 4 (cons 5 (cons 9 Nil)))
+-- Snoc (Snoc (Snoc (Snoc Nil 3) 4) 5) 9
+-- *Main> cons 2 (cons 0 (cons 5 (cons 9 Nil)))
+-- Snoc (Snoc (Snoc (Snoc Nil 2) 0) 5) 9
 
--- Count number of Node's in the tree
-num_nodes :: Tree a -> Int
-num_nodes Empty = 0
-num_nodes (Node root l r) = (num_nodes l) + (num_nodes r) + 1
+-- Convert a usual list into a BList (hint: use cons in the recursive case)
+toBList :: [a] -> BList a
+toBList [] = Nil
+toBList (x:xs) = cons x (toBList (xs))
 
--- *Main> left = (Node 12) (Empty) (Empty)
--- *Main> right = (Node 5) (Empty) (Empty)
--- *Main> myTree = (Node 3) (left) (right)
--- *Main> num_nodes myTree 
--- 3
--- *Main> other = (Node 3) (Empty) (Empty)
--- *Main> left = (Node 12) (other) (Empty)
--- *Main> myTree = (Node 3) (left) (right)
--- *Main> num_nodes myTree 
--- 4
+-- *Main> cons 3 (cons 4 (cons 5 (cons 9 Nil)))
+-- Snoc (Snoc (Snoc (Snoc Nil 3) 4) 5) 9
+-- *Main> cons 2 (cons 0 (cons 5 (cons 9 Nil)))
+-- Snoc (Snoc (Snoc (Snoc Nil 2) 0) 5) 9
+-- *Main> toBList [1,2,3,4,5]
+-- Snoc (Snoc (Snoc (Snoc (Snoc Nil 1) 2) 3) 4) 5
+-- *Main> toBList [9,2,10,4,4]
+-- Snoc (Snoc (Snoc (Snoc (Snoc Nil 9) 2) 10) 4) 4
+-- *Main> toBList [9,25,10,4,202]
+-- Snoc (Snoc (Snoc (Snoc (Snoc Nil 9) 25) 10) 4) 202
+-- *Main> toBList "teststring"
+-- Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc Nil 't') 'e') 's') 't') 's') 't') 'r') 'i') 'n') 'g'
 
----- Insert a new node in the leftmost spot in the tree
-insert_left :: a -> Tree a -> Tree a
-insert_left newNode Empty = (Node newNode Empty Empty)
-insert_left newNode (Node root l r) = Node root (insert_left newNode l) r
+-- Add an element to the end of an ordinary list
+snoc :: [a] -> a -> [a]
+snoc [] a = [a]
+snoc (x:xs) a = x:(snoc xs a)
 
--- *Main> left = (Node 12) (Empty) (Empty)
--- *Main> right = (Node 5) (Empty) (Empty)
--- *Main> myTree = (Node 3) (left) (right)
--- *Main> myTree 
--- Node 3 (Node 12 Empty Empty) (Node 5 Empty Empty)
--- *Main> a = insert_left 2 myTree 
--- *Main> a
--- Node 3 (Node 12 (Node 2 Empty Empty) Empty) (Node 5 Empty Empty)
--- *Main> b = insert_left 2 a 
--- *Main> b
--- Node 3 (Node 12 (Node 2 (Node 2 Empty Empty) Empty) Empty) (Node 5 Empty Empty)
--- *Main> 
+-- *Main> snoc "helpme" 'p'
+-- "helpmep"
+-- *Main> snoc [1,2,3,4,5] 10
+-- [1,2,3,4,5,10]
+-- *Main> snoc [1,2,19,4,5,10] 10
+-- [1,2,19,4,5,10,10]
 
 
--- Insert a new node in the rightmost spot in the tree
-insert_right :: a -> Tree a -> Tree a
-insert_right newNode Empty = (Node newNode Empty Empty)
-insert_right newNode (Node root l r) = Node root l (insert_right newNode r) 
+-- Convert a BList into an ordinary list (hint: use snoc in the recursive case)
+fromBList :: BList a -> [a]
+fromBList Nil = []
+fromBList (Snoc a b) = snoc (fromBList a) b
 
--- *Main> myTree 
--- Node 3 (Node 12 Empty Empty) (Node 5 Empty Empty)
--- *Main> a = insert_right 2 myTree 
--- *Main> a
--- Node 3 (Node 12 Empty Empty) (Node 5 Empty (Node 2 Empty Empty))
--- *Main> b = insert_right 2 a
--- *Main> b
--- Node 3 (Node 12 Empty Empty) (Node 5 Empty (Node 2 Empty (Node 2 Empty Empty)))
--- *Main> 
-
--- Add up all the node values in a tree of numbers
-sum_nodes :: Num a => Tree a -> a
-sum_nodes Empty = 0
-sum_nodes (Node root l r) = (sum_nodes l) + (sum_nodes r) + root
-
--- left = (Node 7) (other) (Empty)
--- right = (Node 5) (Empty) (Empty)
--- myTree = (Node 8) (left) (right)
--- *Main> sum_nodes myTree 
--- 20
--- left = (Node 2) (other) (Empty)
--- right = (Node 5) (Empty) (Empty)
--- myTree = (Node 8) (left) (right)
--- *Main> sum_nodes myTree 
--- 15
--- other = (Node 3) (Empty) (Empty)
--- left = (Node 2) (other) (Empty)
--- *Main> sum_nodes myTree 
--- 18
-
-
-
----- Produce a list of the node values in the tree via an inorder traversal
----- Feel free to use concatenation (++)
-inorder :: Tree a -> [a]
-inorder Empty = []
-inorder (Node root l r) = (inorder l) ++ [root] ++ (inorder r)
-
--- other = (Node 3) (Empty) (Empty)
--- left = (Node 2) (other) (Empty)
--- right = (Node 5) (Empty) (Empty)
--- myTree = (Node 8) (left) (right)
--- *Main> inorder myTree 
--- [3,2,8,5]
--- other = (Node "test") (Empty) (Empty)
--- left = (Node "test1") (other) (Empty)
--- right = (Node"test2") (Empty) (Empty)
--- myTree = (Node "test3") (left) (right)
--- *Main> inorder myTree 
--- ["test","test1","test3","test2"]
+-- *Main> list = toBList [1,2,3,4,5,6,7]
+-- *Main> list
+-- Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc Nil 1) 2) 3) 4) 5) 6) 7
+-- *Main> fromBList list
+-- [1,2,3,4,5,6,7]
+-- *Main> list = toBList "i don't know what a snoc is"
+-- *Main> fromBList li
+-- *Main> fromBList list
+-- "i don't know what a snoc is"
