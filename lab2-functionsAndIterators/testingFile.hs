@@ -138,26 +138,92 @@ my_break f (x:xs)
 
 
 -- Implement the Prelude functions and, or, concat using foldr
-foldr :: (b -> a -> b) -> b -> [a] -> b
-foldr f z [] = []
-foldr f z (x:xs) = x z (foldr f z xs)
-
 my_and :: [Bool] -> Bool
-my_and = undefined
+my_and xs = foldr (&&) True xs
+
+
+-- *Main> my_and [True]
+-- True
+-- *Main> my_and [True,False]
+-- False
+-- *Main> my_and [False,True,False]
+-- False
+-- *Main> my_and [True,False,True]
+-- False
+-- *Main> my_and [True,True,True,True]
+-- True
 
 my_or :: [Bool] -> Bool
-my_or = undefined
+my_or xs = foldr (||) False xs
+
+-- *Main> my_or [False,True,False]
+-- True
+-- *Main> my_or [False,True,True]
+-- True
+-- *Main> my_or [True,True,True]
+-- True
+-- *Main> my_or [False,False,False]
+-- False
+-- *Main> my_or [True,False,False,False]
+-- True
+-- *Main> my_or [False,False,False,True]
+-- True
 
 my_concat :: [[a]] -> [a]
-my_concat = undefined
+my_concat xs = foldr (++) [] xs
+
+-- *Main> my_concat ["we are going", " to add some strings", " together now"]
+-- "we are going to add some strings together now"
+-- *Main> my_concat [[1,2,3],[4,5,6],[7,8,9]]
+-- [1,2,3,4,5,6,7,8,9]
+-- *Main> my_concat [[],[1,2,3]]
+-- [1,2,3]
 
 -- Implement the Prelude functions sum, product, reverse using foldl
 
 my_sum :: Num a => [a] -> a
-my_sum = undefined
+my_sum [] = 0
+my_sum xs = foldl (+) 0 xs
+
+-- *Main> my_sum [1,2,3]
+-- 6
+-- *Main> my_sum [1,2,3,10]
+-- 16
+-- *Main> my_sum [12,2,3,10]
+-- 27
+-- *Main> my_sum [12,2,3,-10]
+-- 7
+-- *Main> my_sum [-12,2,3,-10]
+-- -17
 
 my_product :: Num a => [a] -> a
-my_product = undefined
+my_product [] = 1
+my_product xs = foldl (*) 1 xs
+
+-- *Main> my_product [1,2,3]
+-- 6
+-- *Main> my_product [1,2,3,7]
+-- 42
+-- *Main> my_product [1,2,3,-7]
+-- -42
+-- *Main> my_product [1,2,-3,-7]
+-- 42
+-- *Main> my_product [1,2,-3,-7,20]
+-- 840
+-- *Main> my_product [-3,-7,20]
+-- 420
 
 my_reverse :: [a] -> [a]
-my_reverse = undefined
+my_reverse xs = foldl (\stack x -> x:stack) [] xs
+
+-- [3,2,1]
+-- *Main> my_reverse [1,2,3,2,1]
+-- [1,2,3,2,1]
+-- *Main> my_reverse [1,2,3,2,2]
+-- [2,2,3,2,1]
+-- *Main> my_reverse []
+-- []
+-- *Main> my_reverse [1,2,1,2]
+-- [2,1,2,1]
+-- *Main> my_reverse "this is a string"
+-- "gnirts a si siht"
