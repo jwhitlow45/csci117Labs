@@ -312,33 +312,116 @@ conv21 (Node2 root l r) = Node (id root) (conv21 l) (conv21 r)
 -- Both toBList and fromBList from Part 1 Problem 2 are O(n^2) operations.
 -- Reimplement them using iterative helper functions (locally defined using
 -- a 'where' clause) with accumulators to make them O(n)
+data BList a = Nil | Snoc (BList a) a deriving (Show,Eq)
+
+-- Add an element to the beginning of a BList, like (:) does
+cons :: a -> BList a -> BList a
+cons a Nil = Snoc Nil a
+cons a (Snoc c b) = Snoc (cons a c) b
+
+snoc :: [a] -> a -> [a]
+snoc [] a = [a]
+snoc (x:xs) a = x:(snoc xs a)
+
 toBList' :: [a] -> BList a
-toBList' = undefined
+toBList' a = toBListHelper a where 
+    toBListHelper :: [a] -> BList a
+    toBListHelper [] = Nil
+    toBListHelper (x:xs) = cons x (toBListHelper xs)
+
+-- *Main> toBList' [1,2,3,4]
+-- Snoc (Snoc (Snoc (Snoc Nil 1) 2) 3) 4
+-- *Main> toBList' "i still don't know what a snoc is"
+-- Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc Nil 'i') ' ') 's') 't') 'i') 'l') 'l') ' ') 'd') 'o') 'n') '\'') 't') ' ') 'k') 'n') 'o') 'w') ' ') 'w') 'h') 'a') 't') ' ') 'a') ' ') 's') 'n') 'o') 'c') ' ') 'i') 's'
+-- *Main> toBList' "no entiendo"
+-- Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc Nil 'n') 'o') ' ') 'e') 'n') 't') 'i') 'e') 'n') 'd') 'o'
+-- *Main> toBList' [198,102,248,245,232,293]
+-- Snoc (Snoc (Snoc (Snoc (Snoc (Snoc Nil 198) 102) 248) 245) 232) 293
 
 fromBList' :: BList a -> [a]
-fromBList' = undefined
+fromBList' a = fromBListHelper a where
+    fromBListHelper :: BList a -> [a]
+    fromBListHelper Nil = []
+    fromBListHelper (Snoc a b) = snoc (fromBListHelper a) b
+
+-- *Main> toBList' "i cant read"
+-- Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc (Snoc Nil 'i') ' ') 'c') 'a') 'n') 't') ' ') 'r') 'e') 'a') 'd'
+-- *Main> test = toBList' "i cant read"
+-- *Main> fromBList' test
+-- "i cant read"
+-- *Main> test = toBList' [123,456,789]
+-- *Main> fromBList' test
+-- [123,456,789]
+-- *Main> test
+-- Snoc (Snoc (Snoc Nil 123) 456) 789
 
 
 -- Even tree functions that do multiple recursive calls can be rewritten
 -- iteratively using lists of trees and an accumulator. For example,
 sum_nodes' :: Num a => Tree a -> a
 sum_nodes' t = sum_nodes_it [t] 0 where
-  sum_nodes_it :: Num a => [Tree a] -> a -> a
-  sum_nodes_it [] a = a
-  sum_nodes_it (Empty:ts) a = sum_nodes_it ts a
-  sum_nodes_it (Node n t1 t2:ts) a = sum_nodes_it (t1:t2:ts) (n+a)
+    sum_nodes_it :: Num a => [Tree a] -> a -> a
+    sum_nodes_it [] a = a
+    sum_nodes_it (Empty:ts) a = sum_nodes_it ts a
+    sum_nodes_it (Node n t1 t2:ts) a = sum_nodes_it (t1:t2:ts) (n+a)
 
 -- Use the same technique to convert num_empties, num_nodes, and sum_nodes2
 -- into iterative functions with accumulators
 
 num_empties' :: Tree a -> Int
-num_empties' = undefined
+num_empties' (Node root l r) = num_empties_helper (Node root l r) where
+    num_empties_helper :: Tree a -> Int
+    num_empties_helper Empty = 1
+    num_empties_helper (Node root l r) = (num_empties_helper l) + (num_empties_helper r)
+
+-- left = (Node 12) (Empty) (Empty)
+-- other = (Node 1) (Empty) (Empty)
+-- right = (Node 2) other left
+-- root = (Node 3) left right
+-- *Main> num_empties' root
+-- 6
+-- left = (Node 12) (Empty) (Empty)
+-- other = (Node 1) (Empty) (Empty)
+-- right = (Node 2) other (Empty)
+-- root = (Node 3) left right
+-- *Main> num_empties' root
+-- 5
 
 num_nodes' :: Tree a -> Int
-num_nodes' = undefined
+num_nodes' (Node root l r) = num_nodes_helper (Node root l r) where
+    num_nodes_helper Empty = 0
+    num_nodes_helper (Node root l r) = (num_nodes_helper l) + (num_nodes_helper r) + 1
+
+-- left = (Node 12) (Empty) (Empty)
+-- other = (Node 1) (Empty) (Empty)
+-- right = (Node 2) other (Empty)
+-- root = (Node 3) left right
+-- *Main> num_nodes' root
+-- 4
+-- left = (Node 12) (Empty) (Empty)
+-- other = (Node 1) (Empty) (Empty)
+-- right = (Node 2) other left
+-- root = (Node 3) left right
+-- *Main> num_nodes' root
+-- 5
 
 sum_nodes2' :: Num a => Tree2 a -> a
-sum_nodes2' = undefined
+sum_nodes2' (Node2 root l r) = sum_nodes_helper (Node2 root l r) where
+    sum_nodes_helper (Leaf a) = a
+    sum_nodes_helper (Node2 root l r) = (sum_nodes_helper l) + (sum_nodes_helper r) + root
+
+-- left = (Node 12) (Empty) (Empty)
+-- other = (Node 1) (Empty) (Empty)
+-- right = (Node 2) other left
+-- root = (Node 3) left right
+-- *Main> sum_nodes2' root
+-- 47
+-- left = (Node2 12) (Leaf 9) (Leaf 8)
+-- other = (Node2 1) (Leaf 10) (Leaf 2)
+-- right = (Node2 2) other left
+-- root = (Node2 3) left right
+-- *Main> sum_nodes2' root
+-- 76
 
 -- Use the technique once more to rewrite inorder2 so it avoids doing any
 -- concatenations, using only (:).
@@ -356,7 +439,8 @@ inorder2' = undefined
 -- most once. All functions should produce the same output as the originals.
 
 my_map :: (a -> b) -> [a] -> [b]
-my_map = undefined
+my_map f [] = []
+my_map f (x:xs) = f x (my_map f xs) 
 
 my_all :: (a -> Bool) -> [a] -> Bool
 my_all = undefined
