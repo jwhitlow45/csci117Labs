@@ -15,9 +15,20 @@ The "front" of the queue is at the head of the list, and the "back" of
 the queue is at the end of the list.
 -}
 
-data Queue a = Queue1 [a]
+data Queue a = Queue1 [a] deriving (Show)
 
+-- defines an empty queue
 mtq = Queue1 []
-ismt (Queue1 xs) = undefined
-addq x (Queue1 xs) = undefined
-remq (Queue1 xs) = undefined
+
+-- check if queue is empty
+ismt (Queue1 xs)
+    | length xs == 0 = True
+    | otherwise = False
+
+-- add an element to the queue
+addq x (Queue1 xs) = Queue1 (x:xs)
+
+-- removes element from back of queue
+remq (Queue1 xs)
+    | length xs == 0 = error "Cannot remove from empty queue"
+    | otherwise = (last xs, Queue1 (init xs))
