@@ -312,16 +312,16 @@ conv21 (Node2 root l r) = Node (id root) (conv21 l) (conv21 r)
 -- Both toBList and fromBList from Part 1 Problem 2 are O(n^2) operations.
 -- Reimplement them using iterative helper functions (locally defined using
 -- a 'where' clause) with accumulators to make them O(n)
-data BList a = Nil | Snoc (BList a) a deriving (Show,Eq)
+-- data BList a = Nil | Snoc (BList a) a deriving (Show,Eq)
 
 -- Add an element to the beginning of a BList, like (:) does
-cons :: a -> BList a -> BList a
-cons a Nil = Snoc Nil a
-cons a (Snoc c b) = Snoc (cons a c) b
+-- cons :: a -> BList a -> BList a
+-- cons a Nil = Snoc Nil a
+-- cons a (Snoc c b) = Snoc (cons a c) b-- 
 
-snoc :: [a] -> a -> [a]
-snoc [] a = [a]
-snoc (x:xs) a = x:(snoc xs a)
+-- snoc :: [a] -> a -> [a]
+-- snoc [] a = [a]
+-- snoc (x:xs) a = x:(snoc xs a)
 
 toBList' :: [a] -> BList a
 toBList' a = toBListHelper a where 
@@ -369,10 +369,11 @@ sum_nodes' t = sum_nodes_it [t] 0 where
 -- into iterative functions with accumulators
 
 num_empties' :: Tree a -> Int
-num_empties' (Node root l r) = num_empties_helper (Node root l r) where
-    num_empties_helper :: Tree a -> Int
-    num_empties_helper Empty = 1
-    num_empties_helper (Node root l r) = (num_empties_helper l) + (num_empties_helper r)
+num_empties' t = num_empties_helper [t] 0 where
+    num_empties_helper :: [Tree a] -> Int -> Int
+    num_empties_helper [] n = n
+    num_empties_helper (Empty:ts) n = num_empties_helper ts (n+1)
+    num_empties_helper (Node root l r:ts) n = num_empties_helper (l:r:ts) n
 
 -- left = (Node 12) (Empty) (Empty)
 -- other = (Node 1) (Empty) (Empty)
@@ -386,11 +387,26 @@ num_empties' (Node root l r) = num_empties_helper (Node root l r) where
 -- root = (Node 3) left right
 -- *Main> num_empties' root
 -- 5
+-- *Main> left = (Node 12) (Empty) (Empty)
+-- *Main> other = (Node 1) (Empty) (Empty)
+-- *Main> right = (Node 2) other (Empty)
+-- *Main> root = (Node 3) left right
+-- *Main>
+-- *Main> num_empties' root
+-- 5
+-- *Main> left = (Node 12) (Empty) (Empty)
+-- *Main> other = (Node 1) (Empty) (Empty)
+-- *Main> right = (Node 2) other (Node 3 Empty (Node 2 Empty Empty))
+-- *Main> root = (Node 3) left right
+-- *Main> num_empties' root
+-- 7
 
 num_nodes' :: Tree a -> Int
-num_nodes' (Node root l r) = num_nodes_helper (Node root l r) where
-    num_nodes_helper Empty = 0
-    num_nodes_helper (Node root l r) = (num_nodes_helper l) + (num_nodes_helper r) + 1
+num_nodes' t = num_nodes_helper [t] 0 where
+    num_nodes_helper :: [Tree a] -> Int -> Int
+    num_nodes_helper [] n = n
+    num_nodes_helper (Empty:ts) n = num_nodes_helper ts n
+    num_nodes_helper (Node root l r:ts) n = num_nodes_helper (l:r:ts) (n+1)
 
 -- left = (Node 12) (Empty) (Empty)
 -- other = (Node 1) (Empty) (Empty)
@@ -404,11 +420,35 @@ num_nodes' (Node root l r) = num_nodes_helper (Node root l r) where
 -- root = (Node 3) left right
 -- *Main> num_nodes' root
 -- 5
+-- *Main> left = (Node 12) (Empty) (Empty)
+-- *Main> other = (Node 1) (Empty) (Empty)
+-- *Main> right = (Node 2) other (Node 3 Empty (Node 2 Empty Empty))
+-- *Main> root = (Node 3) left right
+-- *Main> num_nodes' root
+-- 6
+-- *Main> left = (Node 12) (Empty) (Empty)
+-- *Main> other = (Node 1) (Empty) (Empty)
+-- *Main> right = (Node 2) other (Node 3 Empty (Node 2 (Node 2 Empty Empty) Empty))
+-- *Main> root = (Node 3) left right
+-- *Main> num_nodes' root
+-- 7
+-- *Main> left = (Node 12) (Empty) (Empty)
+-- *Main> right = (Node 2) Empty (Node 3 Empty (Node 2 (Node 2 Empty Empty) Empty))
+-- *Main> root = (Node 3) left right
+-- *Main> num_nodes' root
+-- 6
+-- *Main> left = (Node 12) (Empty) (Empty)
+-- *Main> right = (Node 2) Empty (Node 3 Empty (Node 2 (Empty) Empty))
+-- *Main> root = (Node 3) left right
+-- *Main> num_nodes' root
+-- 5
 
 sum_nodes2' :: Num a => Tree2 a -> a
-sum_nodes2' (Node2 root l r) = sum_nodes_helper (Node2 root l r) where
-    sum_nodes_helper (Leaf a) = a
-    sum_nodes_helper (Node2 root l r) = (sum_nodes_helper l) + (sum_nodes_helper r) + root
+sum_nodes2' t = sum_nodes_helper [t] 0 where
+    sum_nodes_helper :: Num a => [Tree2 a] -> a -> a
+    sum_nodes_helper [] n = n
+    sum_nodes_helper (Leaf root:ts) n = sum_nodes_helper ts (n+root)
+    sum_nodes_helper (Node2 root l r:ts) n = sum_nodes_helper (l:r:ts) (n+root)
 
 -- left = (Node 12) (Empty) (Empty)
 -- other = (Node 1) (Empty) (Empty)
@@ -429,7 +469,25 @@ sum_nodes2' (Node2 root l r) = sum_nodes_helper (Node2 root l r) where
 -- Hint 2: You may need to get creative with your lists of trees to get the
 -- right output.
 inorder2' :: Tree2 a -> [a]
-inorder2' = undefined
+inorder2' xs = inorder_helper [xs] [] where
+               inorder_helper [] ys = ys
+               inorder_helper ((Leaf l):xs) ys = inorder_helper xs (l:ys)
+               inorder_helper ((Node2 l a b):xs) ys = inorder_helper (b:(Leaf l):a:xs) (ys)
+
+-- *Main> left = (Node2 12) (Leaf 9) (Leaf 8)
+-- *Main> other = (Node2 1) (Leaf 10) (Leaf 2)
+-- *Main> right = (Node2 2) other left
+-- *Main> root = (Node2 3) left right
+-- *Main> inorder2
+-- inorder2   inorder2'
+-- *Main> inorder2' root
+-- [9,12,8,3,10,1,2,2,9,12,8]
+-- *Main> left = (Node2 12) (Leaf 9) (Leaf 8)
+-- *Main> other = (Node2 1) (Leaf 10) (Leaf 2)
+-- *Main> right = (Node2 2) other (Leaf 20)
+-- *Main> root = (Node2 3) left right
+-- *Main> inorder2' root
+-- [9,12,8,3,10,1,2,2,20]
 
 ---- Part 3: Higher-order functions ----------------
 
@@ -700,10 +758,9 @@ instance Ord ExtInt where
   compare PosInf  PosInf  = EQ
   compare _       _       = GT
   -- Note: defining compare automatically defines <, <=, >, >=, ==, /=
-  
+
 bst :: Tree Int -> Bool
 bst = undefined
     
 bst2 :: Tree2 Int -> Bool
 bst2 = undefined
-
