@@ -61,6 +61,6 @@ addq x (Queue2 xs ys) = (Queue2 (x:xs) ys)
 remq (Queue2 xs ys)
     | ismt (Queue2 xs ys) == True = error "Cannot remove from and empty queue" 
     | otherwise = let (rxs) = (reverse xs) in
-        ((last ys), Queue2 (rxs++yxs) (rxs++yxs)))
+        ((last ys), Queue2 [] (rxs++(init ys)))
 
--- (Queue2 [] (init (rxs++ys))
+        -- last ys is being called on empty list, need to populate ys then dequeue from ys
