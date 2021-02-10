@@ -59,8 +59,47 @@ addq x (Queue2 xs ys) = (Queue2 (x:xs) ys)
 
 -- removes an element from the front of the queue
 remq (Queue2 xs ys)
-    | ismt (Queue2 xs ys) == True = error "Cannot remove from and empty queue" 
-    | otherwise = let (rxs) = (reverse xs) in
-        ((last ys), Queue2 [] (rxs++(init ys)))
+    | ismt (Queue2 xs ys) == True = error "Cannot remove from and empty queue"
+    | length ys == 0 = remq (Queue2 [] (reverse xs++ys)) 
+    | otherwise = (last ys, Queue2 xs (init ys))
 
-        -- last ys is being called on empty list, need to populate ys then dequeue from ys
+-- *Main> a = addq 10 mtq
+-- *Main> b = addq 9 a
+-- *Main> c = addq 8 b
+-- *Main> d = addq 7 c
+-- *Main> e = addq 6 d
+-- *Main> f = addq 5 e
+-- *Main> g = addq 4 f
+-- *Main> h = addq 3 g
+-- *Main> i = addq 11 h
+-- *Main> j = addq 12 h
+-- *Main> j
+-- Queue2 [12,3,4,5,6,7,8,9,10] []
+-- *Main> i = snd (remq h)
+-- *Main> i
+-- Queue2 [] [10,9,8,7,6,5,4]
+-- *Main> addq 11 i
+-- Queue2 [11] [10,9,8,7,6,5,4]
+-- *Main> j = addq 11 i
+-- *Main> k = addq 12 j
+-- *Main> k
+-- Queue2 [12,11] [10,9,8,7,6,5,4]
+-- *Main> remq k
+-- (4,Queue2 [12,11] [10,9,8,7,6,5])
+-- *Main> l = remq k
+-- *Main> l
+-- (4,Queue2 [12,11] [10,9,8,7,6,5])
+-- *Main> l = snd (remq k)
+-- *Main> m = snd (remq l)
+-- *Main> n = snd (remq m)
+-- *Main> m
+-- Queue2 [12,11] [10,9,8,7,6]
+-- *Main> m = mtq
+-- *Main> addq 11 m
+-- Queue2 [11] []
+-- *Main> n = addq 11 m
+-- *Main> o = addq 12 n
+-- *Main> o
+-- Queue2 [12,11] []
+-- *Main> remq o
+-- (12,Queue2 [] [11])
