@@ -15,7 +15,7 @@ The "front" of the queue is at the head of the list, and the "back" of
 the queue is at the end of the list.
 -}
 
-data Queue a = Queue1 [a] deriving (Show) -- added deriving (Show) for debugging purposes
+data Queue a = Queue1 [a]
 
 -- defines an empty queue
 mtq = Queue1 []

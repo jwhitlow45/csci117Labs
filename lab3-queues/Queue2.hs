@@ -18,7 +18,7 @@ elements in the first list and move them to the back, leaving the
 first list empty. We can now process the removal request in the usual way.
 -}
 
-data Queue a = Queue2 [a] [a] deriving (Show) -- added deriving (Show) for debugging purposes
+data Queue a = Queue2 [a] [a]
 
 -- define an empty queue
 mtq = Queue2 [] []
@@ -60,7 +60,7 @@ addq x (Queue2 xs ys) = (Queue2 (x:xs) ys)
 -- removes an element from the front of the queue
 remq (Queue2 xs ys)
     | ismt (Queue2 xs ys) == True = error "Cannot remove from and empty queue"
-    | length ys == 0 = remq (Queue2 [] (reverse xs++ys)) 
+    | length ys == 0 = remq (Queue2 [] (xs++ys)) 
     | otherwise = (last ys, Queue2 xs (init ys))
 
 -- *Main> a = addq 10 mtq
@@ -94,12 +94,14 @@ remq (Queue2 xs ys)
 -- *Main> n = snd (remq m)
 -- *Main> m
 -- Queue2 [12,11] [10,9,8,7,6]
--- *Main> m = mtq
--- *Main> addq 11 m
--- Queue2 [11] []
--- *Main> n = addq 11 m
--- *Main> o = addq 12 n
--- *Main> o
--- Queue2 [12,11] []
--- *Main> remq o
--- (12,Queue2 [] [11])
+-- *Main> a = adds [1,2,3,4] mtq
+-- *Main> a
+-- Queue2 [4,3,2,1] []
+-- *Main> remq a
+-- (1,Queue2 [] [4,3,2])
+-- *Main> remq mtq
+-- *** Exception: Cannot remove from and empty queue
+-- CallStack (from HasCallStack):
+--   error, called at ./Queue2.hs:62:37 in main:Queue2
+-- *Main> testq [1,2,3,4,5]
+-- True
