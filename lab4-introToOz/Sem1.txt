@@ -31,28 +31,25 @@ end
 // Mutable Store: Empty
 // Current Environment : ("S" -> 12, "Z" -> 10, "W" -> 11, "Y" -> 9, "X" -> 8, "IntPlus" -> 1, "IntMinus" -> 2, "Eq" -> 3, "GT" -> 4, "LT" -> 5, "Mod" -> 6, "IntMultiply" -> 7)
 
-// ((15, 12), 2)
-    // 15 is an 'extra' variable used in kernel syntax and can be seen in Sem1.out
-    // 12 has environment name 'S' and is equal to the value 2 as set by IntPlus which adds
-        // 'Z' and 'W' (which both equal 1) to return 2 and store the value into 'S'
-// ((14, 13, 11, 10, 8), 1)
-    // 14 and 13 are both 'extra' variables used in kernel syntax and can be seen in Sem1.out
-    // 11, 10, and 8 have environment names 'W', 'Z', and 'X' respectively and all equal 1
-        // as initially set by X = 1 on line 7
-// ((9), pair(1:10 2:11))
-    // 9 has environment name 'Y' and is assigned to pair(1:10 2:11) where 10 and 11 have
-    // enviornment names 'Z' and 'W'
-// ((1), Primitive Operation)
-    // 1 is representing the primitive operation IntPlus which takes two Integers, adds them, and stores them in a third integer
-// ((2), Primitive Operation)
-    // 2 is representing the primitive operation IntMinus which takes two Integers, subtracts them, and stores them in a third integer
-// ((3), Primitive Operation)
-    // 3 is representing the primitive operation Eq which checks for equality between two variables
-// ((4), Primitive Operation)
-    // 4 is representing the primitive operation GT which checks if one variable is greater than another
-// ((5), Primitive Operation)
-    // 5 is representing the primitive operation LT which checks if one variable is less than another
-// ((6), Primitive Operation)
-    // 6 is representing the primitive operation Mod which performs the modulus operation on two integers
-// ((7), Primitive Operation)
-    // 7 is representing the primitive operation IntMultiply which takes two Integers, multiplies them, and stores them in a third integer
+/*
+((15, 12), 2)
+    15 is an 'extra' variable used in kernel syntax and can be seen in Sem1.out
+    12 has environment name 'S' and is bound to the value 2 as set by IntPlus which adds
+        'Z' and 'W' (which are both bound to 1) to return 2 and store the value into 'S'
+((14, 13, 11, 10, 8), 1)
+    14 and 13 are both 'extra' variables used in kernel syntax and can be seen in Sem1.out
+    11, 10, and 8 have environment names 'W', 'Z', and 'X' respectively and all bound to 1
+        as initially set by X = 1 on line 7
+((9), pair(1:10 2:11))
+    9 has environment name 'Y' and is bound to pair(1:10 2:11) where 10 and 11 have
+    enviornment names 'Z' and 'W'
+All of the primitive operations can be with 1-7. These are just operations built into the
+    language that can be performed on variables.
+
+If we explore the Sem1.out file we can see the extra variables that are being used that
+    are not made clear to the programmer. In this case EXU1 and EXU2 are 13 and 14 respectively.
+    This can be seen by bollowing the multiple uses and assignments of the variables in Sem1.out.
+    15 is EXU3 as seen by it being bound to the value held in S, 2, and never having that value
+    overwritten. This leaves EXU3 to be equal to 2 at the end of the program, while EXU1 and
+    EXU2 are equal to 1.
+ */
