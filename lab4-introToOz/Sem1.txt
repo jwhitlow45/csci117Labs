@@ -27,7 +27,7 @@ end
 // ((5), Primitive Operation), 
 // ((6), Primitive Operation), 
 // ((7), Primitive Operation)
-// 
+ 
 // Mutable Store: Empty
 // Current Environment : ("S" -> 12, "Z" -> 10, "W" -> 11, "Y" -> 9, "X" -> 8, "IntPlus" -> 1, "IntMinus" -> 2, "Eq" -> 3, "GT" -> 4, "LT" -> 5, "Mod" -> 6, "IntMultiply" -> 7)
 

@@ -1,0 +1,61 @@
+// Haskell version of fib:
+//    fib :: Int -> Int
+//    fib 0 = 1
+//    fib 1 = 1
+//    fib x = fib (x-1) + fib (x-2)
+//
+// Rewrite fib in Oz kernel syntax using the template below, including
+// a "skip stack" command added to the first base case, using the 
+// primitive operations {Eq X Y B}, {IntMinus X Y A}, and {IntPlus X Y A}.
+// 
+// Run through the Oz interpreter by calling
+//    runFull "declarative" "fib_oz.txt" "fib_oz.out"
+// after ghci fib_oz.txt and give a brief explanation of each of the stack outputs.
+
+// runFull "declarative" "/home/j/Desktop/githubRepos/csci117Labs/lab4-introToOz/fib_oz.txt" "/home/j/Desktop/githubRepos/csci117Labs/lab4-introToOz/fib_oz.out"
+
+
+local X Result Fib in
+    Fib = proc {$ X Result}
+        local B1 B2 in
+            {Eq X 0 B1}
+            if B1 then {IntPlus X 0 Result} skip Stack // if x == 0
+            else {Eq X 1 B2}
+                if B2 then {IntPlus X 0 Result} // if x == 1
+                else local M1 M2 R1 R2 in
+                        {IntMinus X 1 M1}
+                        {IntMinus X 2 M2}
+                        {Fib M1 R1}
+                        {Fib M2 R2}
+                        {IntPlus R1 R2 Result}
+                    end
+                end
+            end
+        end
+    end
+    X = 4
+    {Fib X Result}
+    skip Browse Result
+end
+
+/*
+
+Stack : "local [\"EXU1\",\"EXU2\",\"EXU3\"] [EXU1 = R1,EXU2 = R2,EXU3 = Result,\"IntPlus\" \"EXU1\" \"EXU2\" \"EXU3\"]local [\"EXU1\",\"EXU2\"] [EXU1 = M2,EXU2 = R2,\"Fib\" \"EXU1\" \"EXU2\"]local [\"EXU1\",\"EXU2\",\"EXU3\"] [EXU1 = R1,EXU2 = R2,EXU3 = Result,\"IntPlus\" \"EXU1\" \"EXU2\" \"EXU3\"]local [\"EXU1\",\"EXU2\"] [EXU1 = M2,EXU2 = R2,\"Fib\" \"EXU1\" \"EXU2\"]local [\"EXU1\",\"EXU2\",\"EXU3\"] [EXU1 = R1,EXU2 = R2,EXU3 = Result,\"IntPlus\" \"EXU1\" \"EXU2\" \"EXU3\"]skip/BResult"
+
+    In this stack hidden variables EXU1, EXU2, and EXU3 are created locally a five times
+        to perform the operations and procedures that are called. This starts with IntPlus
+        being called on R1 and R2 (line 30). Then we return out of this with the result
+        to the Fib procedure calling itself. This enters us back into the recursion which
+        is terminated when the IntPlus returning the result to this recursion. This
+        process is done one more time before the program exits its final recursion with
+        the final result.
+
+Stack : "local [\"EXU1\",\"EXU2\",\"EXU3\"] [EXU1 = R1,EXU2 = R2,EXU3 = Result,\"IntPlus\" \"EXU1\" \"EXU2\" \"EXU3\"]local [\"EXU1\",\"EXU2\",\"EXU3\"] [EXU1 = R1,EXU2 = R2,EXU3 = Result,\"IntPlus\" \"EXU1\" \"EXU2\" \"EXU3\"]skip/BResult"
+
+    In this stack hidden variables EXU1, EXU2, and EXU3 are created locally two times
+    to perform the operations and procedures that are called. IntPlus is called the
+    first time and leads to the exit of the call {Fib M2 R2}. This is followed by
+    one more call to IntPlus before the program exits with the final answer.
+
+
+*/
