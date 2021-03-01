@@ -1,0 +1,20 @@
+// Append function p 133
+
+local Append L1 L2 Out Reverse Out1 in 
+   Append = fun {$ Ls Ms}
+               case Ls 
+                  of nil then Ms
+                  [] '|'(1:X 2:Lr) then Y in
+                     Y = {Append Lr Ms}
+                     // skip Full
+                     (X|Y)
+                end
+            end
+
+   L1 = (1|(2|(3|nil)))
+   L2 = (4|(5|(6|nil)))
+
+   Out = {Append L1 L2}
+   skip Browse Out
+   skip Full
+end
