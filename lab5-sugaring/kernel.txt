@@ -75,17 +75,19 @@ local T X Y in
       end
    end   
 end
-*/
+
 
 // 4) expressions in place of statements
 
-local Fun R in
-   Fun = fun {$ X}     // function returns a value (last item of function)
-            X          // returned value
-         end
-   R = {Fun 4}         // Var = Expression
+local Fun R F Four in
+   Four = 4
+   Fun = proc {$ X F}
+      F = X
+   end
+   {Fun Four R}
    skip Browse R
 end
+*/
 
 
 // 5) Bind fun
