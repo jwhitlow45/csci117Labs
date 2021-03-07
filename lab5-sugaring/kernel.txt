@@ -94,8 +94,15 @@ end
 
 local A B in
    skip Basic
-   A = rdc(1:4 2:B 3:(B#B))         // Bind with pattern
-   B = (5 + (3 - 4))                // Bind with expression
+   local C D E F G in
+      C = 3
+      D = 4
+      E = 5
+      G = '#'(1:B 2:B)
+      A = rdc(1:D 2:B 3:G)
+      {IntMinus C D F}
+      {IntPlus E F B}
+   end
    skip Browse A
    skip Browse B
    skip Store

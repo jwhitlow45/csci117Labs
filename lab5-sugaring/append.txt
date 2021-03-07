@@ -14,7 +14,18 @@ local Append L1 L2 Out Reverse Out1 in
    L1 = (1|(2|(3|nil)))
    L2 = (4|(5|(6|nil)))
 
+   Reverse = fun {$ Xs}
+      case Xs of nil then nil
+         [] '|'(1:X 2:Xr) then A B in
+         A = {Reverse Xr}
+         B = '|'(1:X 2:nil)
+         {Append A B}
+      end
+   end
+
    Out = {Append L1 L2}
+   Out1 = {Reverse Out}
    skip Browse Out
+   skip Browse Out1
    skip Full
 end
