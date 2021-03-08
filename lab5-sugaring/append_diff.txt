@@ -84,12 +84,11 @@ end
       This signifies the end of the list.
 
    2c
-   The number of cons operations in both 2a and 2b are both 6. I determined
+   The number of cons operations in 2a is 24 and 2b is both 6. I determined
       this by adding a local variable Log where cons was being called, setting
       binding Log to 999, and then running skip Browse Log right before cons
-      is called. This allows for me to easily count the number of times that
-      cons is called by counting the amount of times that skip Browse Log is
-      called at the top of my output. It is unsurprising that these are
-      both only called 6 times as while they may recur more than 6 times,
-      cons is only called when the procedure contains an empty list.
+      is called. This occurs twice in 2a, with Append having a cons statement
+      of its own. I differentiated this by binding Log to 998. For 2a, Log is
+      printed 6 times in Reverse, and 15 times in Append. For 2b only Reverse
+      is called and so all 6 cons are from Reverse.
 */

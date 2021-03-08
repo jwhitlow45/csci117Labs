@@ -6,6 +6,10 @@ local Append L1 L2 Out Reverse Out1 in
                   of nil then Ms
                   [] '|'(1:X 2:Lr) then Y in
                      Y = {Append Lr Ms}
+                     local Log in
+                     Log = 998
+                        skip Browse Log
+                     end
                      // skip Full
                      (X|Y)
                 end
