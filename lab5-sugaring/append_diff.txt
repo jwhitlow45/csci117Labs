@@ -1,5 +1,5 @@
 // Append with difference lists
-local L1 End1 L2 End2 H1 T1 H2 T2 LNew in
+local L1 End1 L2 End2 H1 T1 H2 T2 LNew Reverse Out in
    L1 = ((1|(2|End1)) # End1)        // List [1,2] as a difference list
    L2 = ((3|(4|End2)) # End2)        // List [3,4] as a difference list
    
@@ -9,6 +9,43 @@ local L1 End1 L2 End2 H1 T1 H2 T2 LNew in
 
    LNew = (L1 # T2)                  // Build a new difference list
    
+   // fun {Reverse Xs}
+   //    proc {ReverseD Xs ?Y1 Y}
+   //       case Xs of
+   //       nil then 
+   //          Y1=Y
+   //       [] X|Xr then 
+   //          {ReverseD Xr Y1 X|Y}
+   //       end
+   //    end Y1
+   // in
+   //    {ReverseD Xs Y1 nil} Y1
+   // end
+
+   Reverse = fun {$ Xs}
+      local ReverseD Xs Y1 Y in
+         ReverseD = proc {$ Xs Y1 Y}
+            case Xs of
+               nil then
+                  Y1=Y
+               [] '#'(1:X 2:Xr) then
+                  local A in
+                     A = '#'(1:X 2:Y)
+                     {ReverseD Xr Y1 A}
+                  end
+            end
+         end
+      end
+      local ReverseD Xs Y1 in
+         {ReverseD Xs Y1 nil} Y1
+      end
+   end
+
+
+
+   Out = {Reverse LNew}
+
    skip Browse LNew
+   skip Browse Out
    skip Full
 end

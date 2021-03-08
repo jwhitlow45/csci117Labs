@@ -29,3 +29,34 @@ local Append L1 L2 Out Reverse Out1 in
    skip Browse Out1
    skip Full
 end
+
+/*
+   Store : ((160, 136), '|'(1:157 2:158)), 
+   ((159, 130, 106, 87, 73, 62, 24), 6), 
+   ((158, 139), '|'(1:155 2:156)), 
+   ((157, 128, 104, 85, 66, 22), 5), 
+   ((156, 142), '|'(1:153 2:154)), 
+   ((155, 126, 102, 75, 20), 4), 
+   ((154, 145), '|'(1:151 2:152)), 
+   ((153, 124, 89, 37, 18), 3), 
+   ((152, 148, 150, 147, 144, 141, 138, 135, 45), '|'(1:132 2:133)), 
+   ((151, 108, 39, 16), 2),
+   ...
+   ((132, 41, 14), 1), 
+   ((133), nil())
+
+   Current Environment : ("Append" -> 8, "L1" -> 9, "L2" -> 10, 
+   "Out" -> 11, "Reverse" -> 12, "Out1" -> 13, "IntPlus" -> 1, 
+   "IntMinus" -> 2, "Eq" -> 3, "GT" -> 4, "LT" -> 5, "Mod" -> 6, 
+   "IntMultiply" -> 7)
+
+   By reading the Store output you can find Out1 and then trace that to 13
+      which is bound to a tuple. The first element contains the value of the
+      current portion in the list and the second element contains the next
+      variable in the list. Using this we can see that the current variable
+      is bound to 6 and the next variable is 160. We can then see that the
+      the variable 160 is bound to a tuple with first element 157 being
+      bound to 5 and variable 158 containing the next relevant tuple. This
+      pattern continues until we reach the end of the list which has its
+      second value in the tuple bound to null signifying the end of the list.
+*/

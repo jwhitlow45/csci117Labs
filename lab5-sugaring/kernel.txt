@@ -107,3 +107,17 @@ local A B in
    skip Browse B
    skip Store
 end
+
+/*
+   In kernel syntax constants cannot exist in procedure calls and must be
+      bound before they are passed as arguments. This means that there
+      tends to be many more variables in kernel syntax than there are in
+      sugar syntax. This makes kernel syntax much more verbose and
+      prevents the use of common shortcuts such as not including the
+      else part of an if else statement or putting a contant such as 4
+      in a procedure such as {IntPlus A 4 B}. Variables must also be
+      bound in the scope of local and cannot be bound inside of the
+      local statement. Lastly tuples must be constructed using
+      the symbol inside ' ' followed by the first and second value of
+      the tuple as can be seen in line 101.
+*/
