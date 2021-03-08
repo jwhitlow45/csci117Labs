@@ -108,7 +108,7 @@ local A B in
    skip Store
 end
 
-/* 2a
+/* 1
    In kernel syntax constants cannot exist in procedure calls and must be
       bound before they are passed as arguments. This means that there
       tends to be many more variables in kernel syntax than there are in

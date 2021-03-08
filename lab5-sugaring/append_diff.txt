@@ -1,5 +1,5 @@
 // Append with difference lists
-local L1 End1 L2 End2 H1 T1 H2 T2 LNew in
+local L1 End1 L2 End2 H1 T1 H2 T2 LNew Out LTest Reverse in
    L1 = ((1|(2|End1)) # End1)        // List [1,2] as a difference list
    L2 = ((3|(4|End2)) # End2)        // List [3,4] as a difference list
    
@@ -22,7 +22,6 @@ local L1 End1 L2 End2 H1 T1 H2 T2 LNew in
    //    {ReverseD Xs Y1 nil} Y1
    // end
 
- local Reverse Out in 
    Reverse = fun {$ Xs}
       local ReverseD Y1 Y in                  
          ReverseD = proc {$ Xs Y1 Y}     
@@ -44,17 +43,47 @@ local L1 End1 L2 End2 H1 T1 H2 T2 LNew in
       end
    end
 
-      local Out LTest in
-         LTest = (1|(2|(3|(4|(5|(6|nil))))))
-         Out = {Reverse LTest}
-         skip Browse LTest
-         skip Browse Out
-      end
-   end 
+   LTest = (1|(2|(3|(4|(5|(6|nil))))))
+   Out = {Reverse LTest}
+   skip Browse LTest
+   skip Browse Out
    skip Full
 end
 
-/* 2c
+/* 2b
+   Store : ((17, 99, 92, 85, 78, 71, 64, 57, 54, 100, 94), '|'(1:96 2:97)), 
+   ((96, 50), 6), 
+   ((97, 93, 87), '|'(1:89 2:90)), 
+   ((89, 48), 5), 
+   ((90, 86, 80), '|'(1:82 2:83)), 
+   ((82, 46), 4), 
+   ((83, 79, 73), '|'(1:75 2:76)), 
+   ((75, 44), 3), 
+   ((76, 72, 66), '|'(1:68 2:69)), 
+   ((68, 42), 2), 
+   ((69, 65, 59), '|'(1:61 2:62)), 
+   ((61, 40), 1), 
+   ((62, 58), nil()), 
+
+   Current Environment : ("L1" -> 8, "End1" -> 9, "L2" -> 10, "End2" -> 11,
+   "H1" -> 12, "T1" -> 13, "H2" -> 14, "T2" -> 15, "LNew" -> 16, "Out" -> 17,
+   "LTest" -> 18, "Reverse" -> 19, "IntPlus" -> 1, "IntMinus" -> 2, "Eq" -> 3,
+   "GT" -> 4, "LT" -> 5, "Mod" -> 6, "IntMultiply" -> 7)
+
+   By looking at the filtered Store section above we can determine the 
+      contents of the output list. The list was named Out which can be 
+      found to be variable 17 in the Current Environment section. At
+      the top we can see that 17 is bound to a tuple. The first value
+      of this tuple contains the value at the point in the list and
+      the second value of this tuple contains the next variable in the
+      list. By going to 96 we can see that this is bound to 6. By going
+      to 97 we can see that this is bound to a tuple. Again the first
+      value in the tuple contains the value at the point in the list and
+      the second value contains the next value in the list. This
+      continues until they second element of the tuple is bound to nil.
+      This signifies the end of the list.
+
+   2c
    The number of cons operations in both 2a and 2b are both 6. I determined
       this by adding a local variable Log where cons was being called, setting
       binding Log to 999, and then running skip Browse Log right before cons
