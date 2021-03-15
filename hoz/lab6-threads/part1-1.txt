@@ -1,0 +1,57 @@
+local B in
+  thread            // S1
+    B=true          // T1
+  end
+
+  thread            // S2
+    B=false         // T2
+  end
+  
+  if B then         // S3
+    skip Browse B   // S3.1
+  end
+
+end
+
+/*
+S1 T1 S2 T2 S3 S3.1
+  unification error as B is bound twice by T1 and T2 before the
+    skip Browse statement
+
+S1 T1 S2 S3 T2 S3.1
+  unification error as B is bound twice by T1 and T2 before the
+    skip Browse statement
+
+S1 T1 S2 S3 S3.1 T2
+  displays true as S3.1 occurs after T1 occurs and binds B, but before
+    T2 runs and causes an error rebinding B
+
+S1 S2 T1 T2 S3 S3.1
+  unification error as B is bound twice by T1 and T2 before the
+    skip Browse statement
+
+S1 S2 T2 T1 S3 S3.1
+  unification error as B is bound twice by T1 and T2 before the
+    skip Browse statement
+
+S1 S2 S3 T1 S3.1 T2
+  displays true as S3.1 occurs after T1 occurs and binds B, but before
+    T2 runs and causes an error rebinding B
+
+S1 S2 S3 T2 S3.1 T1
+  does not display, B is false as S3.1 occurs after T1 occurs and binds B,
+    but before T1 runs and causes an error rebinding B
+
+S1 S2 S3 S3.1 T1 T2
+  S3 hangs until T1 is executed, then a unficiation error occurs caused
+    by T2
+
+S1 S2 S3 S3.1 T2 T1
+  S3 hangs until T2 is executed, then a unficiation error occurs caused
+    by T1 
+
+S1 S2 T1 S3 S3.1 T2
+  displays true as S3.1 occurs after T1 occurs and binds B, but before
+    T2 runs and causes an error rebinding B
+
+*/
