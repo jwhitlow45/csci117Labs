@@ -1,0 +1,41 @@
+local X Y T in 
+  thread Y = X end
+  X = 3
+  skip Browse Y
+end
+
+local T1 T2 in
+ T2 = thread 3 end
+ T1 = thread (4+3) end
+ skip Browse T2
+ skip Browse T1
+end
+
+/*
+Infinity
+*Hoz> runFullT (Infinity) "declarative threaded" "lab6-threads/part1-2.txt" "lab6-threads/part1-2.out"
+Y : Unbound
+
+T2 : Unbound
+
+T1 : Unbound
+
+Having the program run with a quantum of inifinity causes threads to complete before they move on to another thread.
+This is why every variable is unbound as the thread gets removed from the stack on completion removing
+all variables in its scope from the stack leaving them unbound.
+
+Finite 1
+*Hoz> runFullT (Finite 1) "declarative threaded" "lab6-threads/part1-2.txt" "lab6-threads/part1-2.out"
+Y : 3
+
+T2 : 3
+
+T1 : Unbound
+*/
+
+Having the program run with a quantum of 1 causes the program so 'skip' around a bit while executing threads. This
+does not guarantee that a thread will be before moving onto other parts of the program allowing values in the thread
+to be accessed by other parts of the program. This can be see in the output of Y which is bound to 3 meaning the
+thread in the first part of the program did not complete before skip Browse Y was called. The same can be said for
+the thread found after T2 as the skip Browse was called before the thread completed leading to a bound output of
+3. The thread for T1 did complete before skip Browse T1 was called which can be seen by its unbound output.
