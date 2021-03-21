@@ -597,7 +597,7 @@ sched q n p s@State{front = (tn,st@((m,e):st')):ths, back = back, sas = sas,
                     newthread = newt}
   = case exec m e s'' of
       EError msg -> SError msg                                     -- Error
-      ESuspend -> trace ("thread supsended: " ++ show st) $ sched q 1 p s{front = ths, back = (tn,st):back}  -- Suspension
+      ESuspend -> sched q 1 p s{front = ths, back = (tn,st):back}  -- Suspension
       ENeed id id2 -> -- trace ("Needed: "++show id2) $                                                 -- Thunk
         case slookup id sas of
           Nothing -> SError $ "Impossible: store missing id " ++ show id
