@@ -1,15 +1,19 @@
 local Input Result Consumer in
-    //string contains "125329"
-    A = [049 050 053  051 050  057]
+    //string contains "1 2 5 3 2 9"
+    Input = [049 032 050 032 053 032 051 032 050 032 057]
 
     Consumer = fun {$ P} in
         case P of nil then
             0
         [] '|'(1:X 2:Xs) then R in
-            ({IntMinus X 48}+{Consumer Xs})
+            if (X == 32) then
+                {Consumer Xs}
+            else
+                ({IntMinus X 48} + {Consumer Xs})
+            end
         end
     end
 
-    Result = {Consumer A}
+    Result = {Consumer Input}
     skip Browse Result
 end
