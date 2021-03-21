@@ -1,0 +1,15 @@
+local Input Result Consumer in
+    //string contains "125329"
+    A = [049 050 053  051 050  057]
+
+    Consumer = fun {$ P} in
+        case P of nil then
+            0
+        [] '|'(1:X 2:Xs) then R in
+            ({IntMinus X 48}+{Consumer Xs})
+        end
+    end
+
+    Result = {Consumer A}
+    skip Browse Result
+end
