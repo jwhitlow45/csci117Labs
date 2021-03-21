@@ -1,0 +1,42 @@
+local Producer Consumer Summation A B C in
+    Producer = thread 
+        proc {$ N Limit Out}
+            if (N<Limit) then T N1 in
+                Out = (N|T)
+                N1 = (N + 1)
+                {Producer N1 Limit T}
+            else Out = nil
+            end
+        end
+    end
+
+    Consumer = thread
+        proc {$ P Out}
+            case P of nil then
+                Out = nil
+            [] '|'(1:X 2:Xs) then T in
+                if ((X mod 2) == 0) then
+                    Out = (X|T)
+                    {Consumer Xs T}
+                else
+                    {Consumer Xs Out}
+                end
+            end
+        end
+    end
+
+    Summation = thread
+        fun {$ L}
+            case L of nil then
+                0
+            [] '|'(1:X 2:Xs) then S in
+                (X + {Summation Xs})
+            end
+        end
+    end
+
+    {Producer 0 100 A}
+    {Consumer A B}
+    C = {Summation B}
+    skip Browse C
+end
