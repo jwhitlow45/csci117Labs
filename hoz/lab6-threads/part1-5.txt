@@ -8,3 +8,21 @@ a) The results in the table occur because calculating the fib sequence
 recursively takes 2^n time. In fib2_sugar the fib sequence is found
 iteratively which takes n time and therefore does not ramp up in
 execution time nearly as fast as the other two methods.
+
+b) By writing out the first few iterations we can quickly see a pattern
+for the number of threads created and the corresponding fib number
+
+        f(0) = 0 threads, 1
+        f(1) = 0 threads, 1
+        f(2) = 2 threads, 2
+        f(3) = 4 threads, 3
+        f(4) = 8 threads, 5
+        f(5) = 14 threads, 8
+        f(6) = 24 threads, 10
+
+While a recurrence relation could be used to solve this problem, the table
+above makes the function quite obvious and removes the need for one. If
+we let the number of threads be a function T of n then we can calculate
+n number of threads to be:
+
+        T(n) = 2 * f(n) - 2
