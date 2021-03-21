@@ -1,19 +1,14 @@
-local Input Result Consumer in
-    //string contains "1 2 5 3 2 9"
-    Input = [049 032 050 032 053 032 051 032 050 032 057]
+local InputStream Result Consumer in
+    InputStream = [1 32 7 12 97 4 74]
 
     Consumer = fun {$ P} in
         case P of nil then
             0
         [] '|'(1:X 2:Xs) then R in
-            if (X == 32) then
-                {Consumer Xs}
-            else
-                ({IntMinus X 48} + {Consumer Xs})
-            end
+            (X + {Consumer Xs})
         end
     end
 
-    Result = {Consumer Input}
+    Result = {Consumer InputStream}
     skip Browse Result
 end
