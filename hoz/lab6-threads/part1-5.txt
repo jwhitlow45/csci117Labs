@@ -1,0 +1,10 @@
+                time    in      seconds
+file         n   8       9       10      11      12      13      14      15      16
+f1sugar         0.06    0.13    0.029   0.069   1.169   4.23    10.77   28.73   72.25
+f2sugar         0.01    0.01    0.01    0.01    0.01    0.01    0.02    0.02    0.02
+f1thread        0.15    0.34    0.86    2.23    5.55    14.34   36.56   96.99
+
+a) The results in the table occur because calculating the fib sequence
+recursively takes 2^n time. In fib2_sugar the fib sequence is found
+iteratively which takes n time and therefore does not ramp up in
+execution time nearly as fast as the other two methods.

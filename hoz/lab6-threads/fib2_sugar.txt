@@ -11,7 +11,7 @@ local Fib Fib1 X R in
   Fib = fun {$ X}
     {Fib1 X 1 1}
   end
-  X = 12
+  X = 13
   R = {Fib X}
   skip Browse R
 end

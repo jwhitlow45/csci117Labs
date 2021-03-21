@@ -8,7 +8,7 @@ local Fib X Result in
       (thread {Fib (In-1)} end + thread {Fib (In - 2)} end)
     end
   end
-  X = 12
+  X = 15
   Result = {Fib X}
   skip Browse Result
 end
