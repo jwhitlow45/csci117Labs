@@ -39,3 +39,20 @@ problem(1, [[_,_,_,_,_,_,_,_,_],        % definition of problem to be solved
             [5,_,_,_,_,_,_,7,3],
             [_,_,2,_,1,_,_,_,_],
             [_,_,_,_,4,_,_,_,9]]).
+
+
+% The first line of soduku binds the rows to have a length of 9 to give us the row size
+% of our sodoku grid. An element the same length of the rows is then bound to rows
+% providing the 9x9 grid for the sodoku puzzle to be held and solved in. Rows and Vs
+% (our values for each spot in the grid) are then appended and Vs is given a constained
+% domain of values 1-9 (the valid values that can exist in the grid of a sodoku puzzle).
+% all_distinct is then mapped to Rows to make sure that all the Rows are distinct.
+% transpose then creates a list of columns based off of a list of rows given and these
+% columns are checked to make sure that they are all distainct. We then define rows A - I
+% in a list of rows. At this point we have created a sodoku puzzle with distinct rows
+% and columns and the last thing to check is the 3x3 blocks existing around the edges
+% and center of the puzzle. This is checked by putting rows A-C, D-F, and G-I into the blocks
+% statement and check that the first, middle, and last 3 values of each are all distinct
+% from the first, middle, and last 3 values of the others (all these values must be
+% distinct as they are what constitutes a block). If this check passes then we are left with
+% a valid sodoku puzzle.
