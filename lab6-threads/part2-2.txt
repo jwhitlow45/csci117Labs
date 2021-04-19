@@ -1,0 +1,14 @@
+local InputStream Result Consumer in
+    InputStream = [1 32 7 12 97 4 74]
+
+    Consumer = fun {$ P} in
+        case P of nil then
+            0
+        [] '|'(1:X 2:Xs) then R in
+            (X + {Consumer Xs})
+        end
+    end
+
+    Result = {Consumer InputStream}
+    skip Browse Result
+end

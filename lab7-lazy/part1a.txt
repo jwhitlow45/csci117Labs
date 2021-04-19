@@ -1,0 +1,53 @@
+local O Generate TakeLazy Times Merge Ham in
+
+    fun {Generate N}
+        fun {$} (N#{Generate (N+1)}) end
+    end
+
+    fun {Times N F}
+        fun {$}
+            (A#As) = {F} in
+            ((N*A)#{Times N As})
+        end
+    end
+
+    fun {Merge Xs Ys}
+        fun {$}
+            (A#As) = {Xs} (B#Bs) = {Ys} in
+                if (A < B) then
+                    (A#{Merge As Ys})
+                elseif (A == B) then
+                    (A#{Merge As Bs})
+                else
+                    (B#{Merge Xs Bs})
+                
+            end
+        end
+    end
+
+    fun {TakeLazy N F}
+        (A#As) = {F} in
+            if (N == 0) then
+                nil
+            else
+                (A|{TakeLazy (N-1) As})
+        end
+    end
+
+    fun {Ham}
+        fun {$}
+            local F = {Ham} in
+                (1#{Merge {Times 2 F} {Merge {Times 3 F} {Times 5 F}}})
+            end
+        end
+    end
+
+    O = {TakeLazy 10 {Ham}}
+    skip Browse O
+end
+
+
+
+//fun lazy {Merge X Xs}
+//
+//end

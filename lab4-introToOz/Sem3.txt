@@ -1,0 +1,69 @@
+// Run this program through the Oz interpreter by calling
+//    runFull "declarative" "Sem3.txt" "Sem3.out"
+// Explain the resulting store
+
+local P1 P2 K1 K2 A1 A2 A3 A4 DB1 DB2 F1 F2 F3 F4 in
+	P1 = person(kid:K1 age:A1 dob:DB1 food:F3)
+	P2 = person(kid:K2 age:A2 dob:DB2 food:F4)
+	K1 = kid(age:A3 food:F1)
+	K2 = kid(age:A4 food:F2)
+	A3 = 12
+	F2 = spaghetti()
+	A1 = 54
+	DB2 = 1978
+	P1 = P2
+    skip Full
+end
+
+// Store : ((31, 18, 33, 19), spaghetti()), 
+// ((30, 14, 32, 15), 12), 
+// ((22, 10, 26, 11), kid(age:30 food:31)), 
+// ((25, 20, 29, 21), Unbound), 
+// ((24, 16, 28, 17), 1978), 
+// ((23, 12, 27, 13), 54), 
+// ((8, 9), person(age:23 dob:24 food:25 kid:22)), 
+// ((1), Primitive Operation), 
+// ((2), Primitive Operation), 
+// ((3), Primitive Operation), 
+// ((4), Primitive Operation), 
+// ((5), Primitive Operation), 
+// ((6), Primitive Operation), 
+// ((7), Primitive Operation)
+
+// Mutable Store: Empty
+// Current Environment : ("P1" -> 8, "P2" -> 9, "K1" -> 10, "K2" -> 11, "A1" -> 12,
+	// "A2" -> 13, "A3" -> 14, "A4" -> 15, "DB1" -> 16, "DB2" -> 17, "F1" -> 18,
+	// "F2" -> 19, "F3" -> 20, "F4" -> 21, "IntPlus" -> 1, "IntMinus" -> 2, "Eq" -> 3,
+	// "GT" -> 4, "LT" -> 5, "Mod" -> 6, "IntMultiply" -> 7)
+// Stack : ""
+
+/*
+((31, 18, 33, 19), spaghetti()), 
+	18 and 19 have environment names F1 and F2 respectively. 31 and 33 are the two EXU2 which are
+		each used in the binding of K1 and K2 on lines 8 and 9. The EXU2 are bound to F1 and F2.
+		These are all bound to spaghetti() through the binding of F2 to spaghetti() on line 11.
+((30, 14, 32, 15), 12), 
+	14 and 15 have environment names A3 and A4 respectively. 30 and 32 are the two EXU1 which are
+		each used in the binding of K1 and K2 on lines 8 and 9. The EXU1 are bound to A3 and A4.
+		These are all bound to 12 through the binding of A3 to 12 on line 10.
+((22, 10, 26, 11), kid(age:30 food:31)), 
+	10 and 11 have environment names K1 and K2 respectively. 22 and 26 are the two EXU1 which are
+		each used in the binding of P1 and P2 on lines 6 and 7. The EXU1 are bound to K1 and K2.
+		These are all bound to kid(age:30 food:31) through P1 binding its kid: to K1. The binding
+		of K1 and K2 require 2 hidden variables.
+((25, 20, 29, 21), Unbound), 
+	20 and 21 have environment names F3 and F4 respectively. 25 and 29 are the two EXU4 which are
+		each used in the binding of P1 and P2 on lines 6 and 7. The EXU4 are bound to F3 and F4, but
+		since F4 and F4 are never bound all of the variables remain unbound.
+((24, 16, 28, 17), 1978), 
+	16 and 17 have environment names DB1 and DB2 respectively. 24 and 28 are the two EXU3 which are
+		used in the binding of P1 and P2 on lines 6 and 7. The EXU3 are bound to DB1 and DB2. These
+		are all bound to 1978 on line 13 where DB2 is bound.
+((23, 12, 27, 13), 54), 
+	12 and 13 have environment names A1 and A2 respectively. 23 and 27 are the two EXU2 which are
+		used in the binding of P1 and P2 on lines 6 and 7. The EXU2 are bound to A1 and A2. These
+		are all bound to 54 on line 12 where A1 is bound.
+((8, 9), person(age:23 dob:24 food:25 kid:22)),
+	8 and 9 have environment names P1 an P2. These are bound to person(age:23 dob:24 food:25 kid:22)
+	on line 6 and 7 respectively and require 2 hidden variables.
+*/

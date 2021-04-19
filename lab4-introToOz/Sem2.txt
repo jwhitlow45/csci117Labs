@@ -1,0 +1,67 @@
+// Run this program through the Oz interpreter by calling
+//    runFull "declarative" "Sem2.txt" "Sem2.out"
+// Explain the resulting store
+
+
+local Max Y in
+  Max = proc {$ X}
+    local B in 
+        {GT X Y B}
+        if B then
+          skip Browse X
+        else
+          skip Browse Y
+        end
+    end
+  end
+  Y = 3
+  local X Y in 
+    Y = 6
+    X = 4
+    skip Full
+    {Max X}
+  end
+end
+
+// Store : ((10), 4), 
+// ((11), 6), 
+// ((8), proc(["X"],[local ["B"] [local ["EXU1","EXU2","EXU3"] [EXU1 = X,EXU2 = Y,EXU3 = B,"GT" "EXU1" "EXU2" "EXU3"],local ["EXU1"] [EXU1 = B,if EXU1 then [skip/BX] else [skip/BY]]]],[("Y",9),("GT",4)])), 
+// ((9), 3), 
+// ((1), Primitive Operation), 
+// ((2), Primitive Operation), 
+// ((3), Primitive Operation), 
+// ((4), Primitive Operation), 
+// ((5), Primitive Operation), 
+// ((6), Primitive Operation), 
+// ((7), Primitive Operation)
+
+// Mutable Store: Empty
+// Current Environment : ("X" -> 10, "Y" -> 11, "Max" -> 8, "Y" -> 9, "IntPlus" -> 1, "IntMinus" -> 2, "Eq" -> 3, "GT" -> 4, "LT" -> 5, "Mod" -> 6, "IntMultiply" -> 7)
+// Stack : "local [\"EXU1\"] [EXU1 = X,\"Max\" \"EXU1\"]"
+
+// X : 4
+
+
+/*
+((10), 4), 
+    10 has enviornment name X which is bound to 4. This occurs in the local X Y statement.
+((11), 6), 
+    11 has environment name Y which is bound to 6. This occurs in the local X Y statement.
+((8), proc(["X"],[local ["B"] [local ["EXU1","EXU2","EXU3"] [EXU1 = X,EXU2 = Y,EXU3 = B,"GT" "EXU1" "EXU2" "EXU3"],local ["EXU1"] [EXU1 = B,if EXU1 then [skip/BX] else [skip/BY]]]],[("Y",9),("GT",4)])), 
+    8 has enviorment name Max which is bound to the procedure starting on line 8 of this file 
+        and ending on line 16. This procedure is defined anonymously as shown by the $, and has
+        one argument X which is compared to Y to determine which is greater than the other. If
+        X is greater than Y then B is set to be True. Otherwise B is set to False.
+((9), 3), 
+    9 has environment name Y and is bound to 3. This is done at line 17 of this file in the
+        program. It would appear as though Y should be bound to 6 as shown on line 19 but this is
+        not the case as that Y goes out of scope and is only local to the snippet from line 18 to
+        23 and not the entire program.
+
+Looking at Sem2.out we see that we have multiple hidden variables just like the previous file
+    Sem1.out. These do not show up in Store: except for when looking at the procedure 8 is bound
+    to. This is because hidden variables EXU2 and EXU3 are not bound. Despite EXU1 being bound it
+    is never used and therefore is left on the stack and does not appear to be bound in Store:.
+
+*/
+    

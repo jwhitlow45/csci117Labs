@@ -1,0 +1,30 @@
+local A B C D Producer OddFilter in     //define A B C and D for start, end, stream output and filter output
+                                        //define Produce and OddFilter for procedures
+    Producer = proc {$ N Limit Out}
+        if (N<Limit) then T N1 in
+            Out = (N|T)
+            N1 = (N + 1)
+            {Producer N1 Limit T}
+        else Out = nil
+        end
+    end
+
+    OddFilter = proc {$ P Out}
+        case P of nil then  //if P is nil then set Out as nil (base case)
+            Out = nil
+        [] '|'(1:X 2:Y) then T in   //if P has values remaining (recursive case)
+            if ((X mod 2) == 0) then    //if X is even
+                Out = (X|T)                 //set Out to tuple containing X and T (T is place holder for next value)
+                {OddFilter Y T}             //recursively call OddFilter on remaining values (Y) given next value (T)
+            else                        //else
+                {OddFilter Y Out}           //recursively call OddFilter on reamining values (Y) and next value (Out)
+            end
+        end
+    end
+
+    A = 0               //set start value of stream to 0
+    B = 100             //set limit to stream (stream will end at limit - 1)
+    {Producer A B C}    //call producer and store stream in C
+    {OddFilter C D}     //call filter and store result in D
+    skip Browse D       //print out result
+end

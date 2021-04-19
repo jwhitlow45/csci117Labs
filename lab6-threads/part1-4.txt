@@ -1,0 +1,15 @@
+local B in
+  B = thread true end
+  if B then skip Browse B end
+end
+
+/*
+The minimum quantum that will not cause the kernel to suspend is 5.
+This is because the thread is only allowed to work on 4 statements
+at once with a quantum of 4. There are 4 statements preceeding the
+if statement when looking at the elborated syntax in the .out file.
+Once the quantum is set to 5 the thread can work on 5 statements at
+once and the fifth statement happens to be the if statement. This
+causes the if statement to have to wait for B to be bound to
+resolve the program suspension.
+*/
