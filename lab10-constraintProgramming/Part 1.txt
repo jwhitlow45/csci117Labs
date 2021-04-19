@@ -1,0 +1,57 @@
+Part 1
+n_queens(N, Qs) :-
+        length(Qs, N),
+        Qs ins 1..N,				% restricts all values in Qs to values from 1 to N (prevents Queens from being not on the board)
+        safe_queens(Qs).
+
+safe_queens([]).
+safe_queens([Q|Qs]) :- safe_queens(Qs, Q, 1), safe_queens(Qs).
+
+safe_queens([], _, _).
+safe_queens([Q|Qs], Q0, D0) :-
+        Q0 #\= Q,					% Q0 is not equal to Q	
+        abs(Q0 - Q) #\= D0,			% absolute value of Q0 minus Q cannot be equal to the current diagonal
+        D1 #= D0 + 1,				% increment the diagonal
+        safe_queens(Qs, Q0, D1).	% recursively call on Qs, Q0, and D1 (incremented diagonal)
+
+Safe queens gets called as the last statement of n_queens.
+This call starts by going to the safe queens which takes a
+list argument and splts the list into its head and tail as
+Q and Qs respectively (we are going to label the arguments
+in this list [A, B, C, D]). Then safe_queens is called and the
+form with 3 arguments, a list ([B, C, D]), a variable (A), and a 1
+is called.
+
+From here Qs is broken down further into its head (B) and tail ([C, D]),
+A becomes labelled as Q0 and B becomes labelled as Q. the following
+constraints are then applied
+
+1. A is not equal to B
+2. The absolute value of A - B is not equal to 1
+
+D1 is then set as D0 + 1 (effectively incrementing D0), and safe_queens
+with three arguments is recursively called with arguments [C, D], A, and D1 (1)
+
+The following restraints are created by continuing to trace this recursive call
+
+3. A is not equal to C
+4. The absolute value of A - C is not equal to 2
+
+5. A is not equal to D
+6. The absolute value of A - D is not equal to 3
+
+At this point we have finished the first safe_queens call in the safe_queens with
+a single argument. This statement then recursively calls itself on the tail of the
+list it received causing safe queens to get called on the tail of the prior list.
+This repeats until there are no more items in the tail of the list passed to safe
+queens and we hit our base case. These are the resulting constraints of tracing
+this algorithm.
+
+7. B is not equal to C
+8. The absolute value of B - C is not equal to 1
+
+9. B is not equal to D
+10. The absolute value of B - D is not equal to 2
+
+11. C is not equal to D
+12. The absolute balue of C - D is not equal to 1
