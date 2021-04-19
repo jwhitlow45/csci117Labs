@@ -9,7 +9,7 @@ sudoku(Rows) :-
         
         maplist(all_distinct, Rows),        % check that all Rows are distinct
         
-        transpose(Rows, Columns),           % swap rows and columns
+        transpose(Rows, Columns),           % makes list of columns based on list of rows given
         
         maplist(all_distinct, Columns),     % check that all Columns are distinct
         
