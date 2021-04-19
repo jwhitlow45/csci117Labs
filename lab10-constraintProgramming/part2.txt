@@ -1,0 +1,41 @@
+sudoku(Rows) :-
+        length(Rows, 9), maplist(same_length(Rows), Rows), % bind the rows to have length of 9
+                                                    % bind each element in same_length(Rows) to
+                                                    % another element in Rows creating a 9x9
+                                                    % grid for the sodoku puzzle
+        
+        append(Rows, Vs), Vs ins 1..9,      % append Rows and Vs, limit the domain of Vs
+                                            % to 1 through 9
+        
+        maplist(all_distinct, Rows),        % check that all Rows are distinct
+        
+        transpose(Rows, Columns),           % swap rows and columns
+        
+        maplist(all_distinct, Columns),     % check that all Columns are distinct
+        
+        Rows = [As,Bs,Cs,Ds,Es,Fs,Gs,Hs,Is],% define Rows as A - I    
+        
+        blocks(As, Bs, Cs),                 % check that values in the 3 blocks (3x3 squares)
+                                            % found in rows A - C are unique
+        
+        blocks(Ds, Es, Fs),                 % check that values in the 3 blocks found in rows
+                                            % D - F are unique
+        
+        blocks(Gs, Hs, Is).                 % check that values in the 3 blocks found in rows
+                                            % G - I are unique
+
+blocks([], [], []).
+blocks([N1,N2,N3|Ns1], [N4,N5,N6|Ns2], [N7,N8,N9|Ns3]) :-
+        all_distinct([N1,N2,N3,N4,N5,N6,N7,N8,N9]), % check that values in a block are unique
+        
+        blocks(Ns1, Ns2, Ns3).  % recursively call block on tail (row with 3 elements removed)
+
+problem(1, [[_,_,_,_,_,_,_,_,_],        % definition of problem to be solved
+            [_,_,_,_,_,3,_,8,5],
+            [_,_,1,_,2,_,_,_,_],
+            [_,_,_,5,_,7,_,_,_],
+            [_,_,4,_,_,_,1,_,_],
+            [_,9,_,_,_,_,_,_,_],
+            [5,_,_,_,_,_,_,7,3],
+            [_,_,2,_,1,_,_,_,_],
+            [_,_,_,_,4,_,_,_,9]]).
