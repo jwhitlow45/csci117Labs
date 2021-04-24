@@ -1,0 +1,70 @@
+:- use_module(library(clpfd)).
+
+crypt1([H1|L1], [H2|L2], [H3|L3], L4) :- 
+    L4 ins 0..9,					% Give constraints on variable values in L4
+	H1 #\= 0, H2 #\= 0, H3 #\= 0, 	% Heads cannot have value 0
+    all_distinct(L4),				% Variable values are distinct in L4
+    reverseWord([H1|L1], R1, []), 	% Reverse the 3 input words
+    reverseWord([H2|L2], R2, []),
+    reverseWord([H3|L3], R3, []),
+    helper(R1, R2, R3, 0).			% Call to helper function that does the sum with reversed words one iteration at a time
+
+
+reverseWord([], X, X).			% base case: returns reversed list when entered list is empty
+reverseWord([H|T], X, A) :-		% recursive case: takes head and adds it to accumulator list
+     reverseWord(T, X, [H|A]).
+
+% first word, second word, third word, num iterations, carry1, carry2
+helper([],[],[C], C). 
+helper([], [H2|T2], [H3|T3], C) :- 
+    H3 #= (H2 + C) mod 10,
+    H2 + C #= H3 + (C1*10),
+    helper([], T2, T3, C1).
+
+helper([H1|T1], [], [H3|T3], C) :- 
+    H3 #= (H2 + C) mod 10,
+    H2 + C #= H3 + (C1*10),
+    helper(T2, [], T3, C1).
+                                            
+helper([H1|T1], [H2|T2], [H3|T3], C) :- 
+    H3 #= (H1 + H2 + C) mod 10,
+    H1 + H2 + C #= H3 + (C1*10),
+    helper(T1, T2, T3, C1).
+
+/*
+crypt1([S,E,N,D],[M,O,R,E],[M,O,N,E,Y],[D,N,E,S,R,O,M,Y]), labeling([ff],[D,N,E,S,R,O,M,Y]).
+D = 7,
+E = 5,
+M = 1,
+N = 6,
+O = 0,
+R = 8,
+S = 9,
+Y = 2
+false <- this false shows that there are no other solutions
+
+crypt1([T,H,I,S],[D,O],[W,O,R,K],[T,H,I,S,D,O,E,W,R,K]), labeling([ff],[T,H,I,S,D,O,E,W,R,K]).
+D = 2,
+E = 8,
+H = 0,
+I = 4,
+K = 5,
+O = 9,
+R = 7,
+S = 6,
+T = 1,
+W = 3
+
+D = 2,
+E = 8,
+H = 0,
+I = 4,
+K = 5,
+O = 6,
+R = 7,
+S = 9,
+T = 1,
+W = 3
+
+This one had a lot of solutions so here are the first two
+*/
