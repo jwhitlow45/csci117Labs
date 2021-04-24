@@ -99,7 +99,6 @@ problem(1, [[_,_,_,_,_,_,_,_,_],        % definition of problem to be solved
             [_,_,2,_,1,_,_,_,_],
             [_,_,_,_,4,_,_,_,9]]).
 
-
 % The first line of soduku binds the rows to have a length of 9 to give us the row size
 % of our sodoku grid. An element the same length of the rows is then bound to rows
 % providing the 9x9 grid for the sodoku puzzle to be held and solved in. Rows and Vs
