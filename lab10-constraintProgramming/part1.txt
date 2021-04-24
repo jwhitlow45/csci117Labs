@@ -137,7 +137,7 @@ Person B says that it is false that Person C is a knave
 Person C says I am a knight or Person A is a knight */
 
 knights(2, [A,B,C]) :-
-        sat(A =:= ~B),
+	sat(A =:= ~B),
         sat(B =:= C),
         sat(C =:= ((C =:= 1) + (A =:= 1))).
 
