@@ -117,3 +117,13 @@ problem(1, [[_,_,_,_,_,_,_,_,_],        % definition of problem to be solved
 % a valid sodoku puzzle.
 
 % Knights and Knaves
+
+% You meet two people
+% Person A says at least one of the following is true:
+%       that I am a knight or that Person B is a knight
+% Person B says Person A could say that I am a knave
+:- use_module(library(clpb)).
+
+knights(1, [A,B]) :-
+	sat(A =:= ((A =:= 1) + (B =:= 1))),
+    sat(B =:= (A =:= ~B)).	
