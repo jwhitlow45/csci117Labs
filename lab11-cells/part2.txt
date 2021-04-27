@@ -1,0 +1,25 @@
+local Generate GenF in
+    fun {Generate}
+        local C in
+            newCell -1 C                //set starting value to -1 so first output is 0
+            fun {$}
+                C := {IntPlus @C 1}     //iterate C
+                @C                      //return iterated C
+            end
+        end
+    end
+
+    local A A1 A2 A3 A4 in 
+        GenF = {Generate}
+        A = {GenF}
+        A1 = {GenF}
+        A2 = {GenF}
+        A3 = {GenF}
+        A4 = {GenF}
+        skip Browse A
+        skip Browse A1
+        skip Browse A2
+        skip Browse A3
+        skip Browse A4
+    end
+end
