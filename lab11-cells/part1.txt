@@ -1,0 +1,102 @@
+local SumList SumListS Out1 Out2 in
+    //----------------SumList----------------
+
+    fun {SumList L}       // Declarative recursive
+        case L of nil then 0
+            [] '|'(1:H 2:T) then (H + {SumList T})
+        end
+    end
+
+    fun {SumListS L}        // Stateful iterative
+        local SumListIt C in
+            newCell 0 C
+            SumListIt = proc {$ Ls}
+                case Ls of '|'(1:X 2:Xs) then
+                    C := {IntPlus @C X}
+                    {SumListIt Xs}
+                end
+            end
+            {SumListIt L}
+            @C
+        end
+    end
+
+    ////testing SumList
+    //local A A1 B B1 in
+    //    A = (1|(2|(3|nil)))         //test arrays
+    //    A1 = (4|(2|(-7|(10|nil))))
+    //    
+    //    B = {SumListS A}            //test array A
+    //    B1 = {SumListS A1}           //test array A1
+
+    //    skip Browse B
+    //    skip Browse B1
+    //end
+
+    //test results
+    // *Hoz> runFull "stateful" "part1.txt" "out.txt"
+    // B : 6
+    // B1 : 9
+
+    //Out1 = {SumList [1 2 3 4]}
+    //Out2 = {SumListS [1 2 3 4]}
+    //skip Browse Out1
+    //skip Browse Out2
+    //skip Full
+end
+
+local FoldL FoldLS Out1 Out2 in
+    //----------------FoldL----------------
+
+    fun {FoldL F Z L}            // Declarative recursive
+        case L of nil then Z
+            [] '|'(1:H 2:T) then {FoldL F {F Z H} T}
+        end
+    end
+
+    fun {FoldLS O Z L}
+        local FoldLIt C in            
+            newCell Z C            
+            FoldLIt = proc {$ Op Z Ls}
+                case Ls of '|'(1:X 2:Xs) then
+                    C := {Op @C X}
+                    {FoldLIt Op Z Xs}
+                end
+            end
+            {FoldLIt O Z L}
+            @C
+        end
+    end
+ 
+    ////testing FoldL 
+    // local A A1 B B1 in
+    //     A = (1|(2|(3|nil)))         //test arrays
+    //     A1 = (4|(2|(-7|(10|nil))))
+ 
+    //     B = {FoldLS IntPlus 0 A}           //test array A
+    //     B1 = {FoldLS IntMultiply 1 A1}     //test array A1
+ 
+    //     skip Browse B
+    //     skip Browse B1
+    // end
+
+    //test results
+    // *Hoz> runFull "stateful" "part1.txt" "out.txt"
+    // B : 6
+    // B1 : -560
+
+    Out1 = {FoldL fun {$ X Y} (X+Y) end 3 [1 2 3 4]}
+    // Out2 = {FoldLS fun {$ X Y} (X+Y) end 3 [1 2 3 4]}
+    skip Browse Out1
+    // skip Browse Out2
+    skip Full
+end
+
+// Looking at the declarative recursive version of each function compared to the stateful iterative it is evident
+// that they are working differently. The declarative versions use less store variables as they do not have
+// a function and a procedure to deal with, rather having only one function. The stateful versions however have
+// an extra procedure which causes there to be more store variables used.
+
+// There is also a difference in the mutable store. The declarative functions do not use the mutable store
+// as they use no cells. The stateful functions do use the mutable store though as they create a cell which
+// is mutable.
