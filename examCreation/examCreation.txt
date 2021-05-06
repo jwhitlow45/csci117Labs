@@ -1,12 +1,27 @@
 Exam Creation Assignment
 
 FB (Fill Blank)
-    A ____ function generates values not when it is called, but when the result is ____.
-        lazy, needed
+    A ____ function generates values not when it is applied, but when the result is needed.
+        lazy
+
+    Concurrent programming uses multiple execution paths called ____ in which the program
+    will not neccesarily execute lines of code in sequential order.
+        threads
+
+    Syntactic ____ is used to make programs easier to read and eliminates the verbosity found
+    in kernel syntax.
+        sugar
+
+    
 
     
 
 M (Matching)
+    Oz function
+
+    Oz procedure
+
+    Prolog
 
 
 MA (Multiple Answer)
@@ -17,20 +32,21 @@ MA (Multiple Answer)
             toBListHelper [] = Nil
             toBListHelper (x:xs) = cons x (toBListHelper xs)
 
-    Which of the following are correct labels of the above toBList function in Haskell?
-        a)correct:Iterative
-        b)correct:Declarative
-        c)Lazy
-        d)Recursive
+    Which of the following accurately describes the above function 'toBList' in Haskell?
+        a)correct: Iterative
+        b)correct: Declarative
+        c)correct: Lazy
+        d)correct: Recursive
+        e)Imperative
+        f)Concurrent
 
 
 MC (Multiple Choice)
     
-
         
 
     
-    What data-type are Cells in Oz most comparable to in other languages?
+    What data type/data structure are Cells in Oz most comparable to in other languages?
         a)correct:Pointers
         b)Objects
         c)Arrays
