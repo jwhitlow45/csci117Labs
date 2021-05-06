@@ -1,3 +1,4 @@
+//part2
 local Generate GenF in
     fun {Generate}
         local C in
