@@ -1,0 +1,84 @@
+//part3
+local NewQueue in
+    fun {NewQueue Size} in
+        local Push Pop IsEmpty SlotsAvailable Head Tail P S in
+            newCell Size S                      //init size of NewQueue
+            newCell P Head                      //set head of the NewQueue 
+            newCell P Tail                      //set tail of the NewQueue
+
+            Push = proc {$ Value}
+                local NTail in                  //init variable for new tail
+                    (Value|NTail) = @Tail       //concat value and new tail to create tail
+                    Tail := NTail               //set tail to new tail
+                    if (@S == 0) then           //if no slots are available
+                        local NH NT in
+                            (NH|NT) = @Head     //push value out of queue
+                            Head := NT
+                        end
+                    else
+                        S := (@S - 1)           //decrease number of slots available
+                    end
+                end
+            end
+            
+            Pop = fun {$}
+                if (@S == Size) then            //if queue is full then return unbound value
+                    @Head
+                else
+                    local T in                  
+                        T = @Head               //store head in temp
+                        case T of (NH|NT) then  //if values are in queue
+                            Head := NT          //set head to new tail
+                            S := (@S + 1)       //increment S to show more available space in queue
+                            NH                  //return head of new queue
+                        end
+                    end
+                end
+            end
+
+            IsEmpty = fun {$}
+                (@S == Size)                    //return bool result of size equaling init size
+            end
+
+            SlotsAvailable = fun {$}
+                @S                              //return S (S is number of slots available)
+            end
+
+            //operations that can be performed on the queue
+            ops(push:Push pop:Pop isEmpty:IsEmpty avail:SlotsAvailable)
+        end
+    end
+
+    local S B1 A1 A2 B2 V1 V2 V3 Out Pu Po IsE Av in
+        S = {NewQueue 2}                                //init new queue of size 2
+        S = ops(push:Pu pop:Po isEmpty:IsE avail:Av)    //assign operations to S
+        B1 = {IsE}                                      //store if queue is empty in B1
+        A1 = {Av}                                       //store num slots available in A1
+        {Pu 1}                                          //push value of 1
+        {Pu 2}                                          //push value of 2
+        A2 = {Av}                                       //store number of slots available in A2
+        {Pu 3}                                          //push value of 3
+        B2 = {IsE}                                      //store if queue is empty in B2
+        V1 = {Po}                                       //store pop result in v1
+        V2 = {Po}                                       //store pop result in v2
+        V3 = {Po}                                       //store pop result in v3
+        Out = [V1 V2 V3 B1 B2 A1 A2]                    //store result of above operations in list to be output
+        skip Browse Out                                 //print output
+
+        // *Hoz> runFull "stateful" "part3.txt" "out.txt"
+        // Out : [ 2  3  Unbound  true()  false()  2  0 ]
+    end
+end
+
+/*
+b)
+    This is a secure ADT because none of the values stored in the queue can be directly accessed and can only
+    be changed through the use of already defined methods of the ADT. This prevents any undefined behavior or
+    corruption of the already defined data structure that we have defined through programming logic as a queue.
+
+c)
+    The stateful version is going to use less memory overall as it does not use recursion to perform each operation.
+    It instead uses cells to keep track of the operations it performs. By comparison the declarative version uses
+    recursion which requires no cells or dynamic memory but requires more memory to be used on the stack to keep
+    track of all of the new variables created in the recursion.
+*/
