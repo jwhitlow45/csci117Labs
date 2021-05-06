@@ -1,0 +1,41 @@
+Exam Creation Assignment
+
+FB (Fill Blank)
+    A ____ function generates values not when it is called, but when the result is ____.
+        lazy, needed
+
+    
+
+M (Matching)
+
+
+MA (Multiple Answer)
+    Code:
+        toBList :: [a] -> BList a
+        toBList a = toBListHelper a where 
+            toBListHelper :: [a] -> BList a
+            toBListHelper [] = Nil
+            toBListHelper (x:xs) = cons x (toBListHelper xs)
+
+    Which of the following are correct labels of the above toBList function in Haskell?
+        a)correct:Iterative
+        b)correct:Declarative
+        c)Lazy
+        d)Recursive
+
+
+MC (Multiple Choice)
+    
+
+        
+
+    
+    What data-type are Cells in Oz most comparable to in other languages?
+        a)correct:Pointers
+        b)Objects
+        c)Arrays
+        d)Vectors
+        e)Dictionaries
+
+
+MD (Multiple Dropdown)
