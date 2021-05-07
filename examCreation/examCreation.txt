@@ -137,11 +137,11 @@ MC (Multiple Choice)
         e)-16
 
 
-    13. Revise
+    13.
     The Hamming Problem is solved using:
     a)correct: Demand-driven concurrency
     b)Supply-driven concurrency
-    c)Strict functional programming //need different distractor
+    c)Recursive backtracking
     d)Logic programming
     
 
@@ -166,12 +166,7 @@ MD (Multiple Dropdown)
         Decoder
 
 
-    16. Revise
-    Natural language parsing can be done flexibly using ____, allowing parsing with no restriction on ____.
-                                                    correct:Relational programming                  correct: Grammar
-                                                    Stateful programming                            Threads
-                                                    Imperative programming                          Data
-                                                    Object-oriented programming                     State
+    16.
 
     //Provide Oz code, ask for prolog code
     //Give a rule, translate rule into prolog
