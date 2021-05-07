@@ -28,6 +28,7 @@ FB (Fill Blank)
 M (Matching) correct answer is written to the right of the dash for each word
 
     5.
+    Match each item to its primary characteristic
     Stream - a          a)list of values which has a possibly unbound length     
     Buffer - b          b)list of values that have been created by a Producer but are yet
                         to be used by a Consumer
@@ -137,6 +138,12 @@ MC (Multiple Choice)
 
 
     13. Revise
+    The Hamming Problem is solved using:
+    a)correct: Demand-driven concurrency
+    b)Supply-driven concurrency
+    c)Strict functional programming //need different distractor
+    d)Logic programming
+    
 
 
 
@@ -144,7 +151,7 @@ MD (Multiple Dropdown)
 
     14.
     Garbage collection prevents ____ by automatically reclaiming memory during which the program ____.
-                                correct: Memory leaks                                           correct:halts temporarily
+                                correct: Memory leaks                                           correct: halts temporarily
                                 Memory mishandling                                              releases all of its memory
                                 Loss of data                                                    saves all of the released memory
                                 Data corruption                                                 halts for a predetermined amount of time
@@ -160,3 +167,13 @@ MD (Multiple Dropdown)
 
 
     16. Revise
+    Natural language parsing can be done flexibly using ____, allowing parsing with no restriction on ____.
+                                                    correct:Relational programming                  correct: Grammar
+                                                    Stateful programming                            Threads
+                                                    Imperative programming                          Data
+                                                    Object-oriented programming                     State
+
+    //Provide Oz code, ask for prolog code
+    //Give a rule, translate rule into prolog
+    //Grammer generated sentences
+                                                    
